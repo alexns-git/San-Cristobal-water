@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f6f4ed" />
+<title>Street Studio v1.10 — Pattern Book prototype</title>
+<style>
+:root{--ink:#23332f;--muted:#67766f;--paper:#f6f4ed;--panel:#fffefa;--line:#d7ddd3;--green:#2d7161;--soft:#e9f0e9;--accent:#d47a4b;--shadow:0 8px 28px #17362711;--radius:16px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial;color:var(--ink);background:var(--paper);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.35;cursor:not-allowed}.app{min-height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) 390px;grid-template-rows:auto minmax(0,1fr);gap:0}.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;background:var(--paper);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brandmark{width:35px;height:35px;border-radius:11px;background:var(--green);color:white;display:grid;place-items:center;font-size:20px;font-weight:900}.brand h1{font-family:Georgia,serif;font-size:22px;letter-spacing:-.65px;margin:0;font-weight:600}.brand small{font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700;display:block}.header-actions{display:flex;gap:7px;align-items:center}.tiny-btn,.btn,.icon-btn{border:1px solid var(--line);background:#fff;padding:8px 11px;border-radius:9px;color:var(--ink);font-weight:650;font-size:12px;white-space:nowrap}.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}.btn.danger{color:#a5463b}.tiny-btn:hover,.btn:hover,.icon-btn:hover{border-color:#719c8a}.viewer{min-width:0;position:relative;background:linear-gradient(#e5f1f0,#e9ece3);overflow:hidden}.viewer canvas{width:100%;height:100%;display:block;touch-action:pan-y}.viewer-label{position:absolute;top:16px;left:18px;pointer-events:none;background:#fffefbe0;backdrop-filter:blur(8px);border:1px solid #ffffffa3;padding:10px 12px;border-radius:12px;box-shadow:var(--shadow)}.viewer-label strong{font-family:Georgia,serif;font-size:17px;font-weight:600;display:block}.viewer-label span{color:var(--muted);font-size:11px}.viewer-corner{position:absolute;bottom:16px;left:18px;background:#fffefbe0;border-radius:9px;padding:7px 10px;font-size:11px;color:#455950;pointer-events:none}.viewer-corner b{color:#1f4b43}.viewer-status{position:absolute;bottom:16px;right:16px;font-size:11px;color:#59695f;background:#fffdfaeb;padding:7px 9px;border-radius:9px}.viewer-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:25px;text-align:center;background:#ebf0e8}.viewer-fallback div{max-width:300px;background:#fffefa;border:1px solid var(--line);border-radius:16px;padding:22px;line-height:1.5}.viewer-fallback strong{display:block;font-size:19px;margin-bottom:8px}.control{min-height:0;min-width:0;display:flex;flex-direction:column;background:var(--panel);border-left:1px solid var(--line)}.tabs{display:grid;grid-template-columns:repeat(4,1fr);padding:8px;gap:4px;border-bottom:1px solid var(--line)}.tab{border:0;border-radius:9px;background:transparent;color:#63786d;font-size:12px;font-weight:750;padding:11px 4px}.tab.active{background:#e4ede5;color:#1c5b49}.panel{overflow-y:auto;flex:1;overscroll-behavior:contain;padding:16px 17px 44px}.section-heading{font-family:Georgia,serif;font-size:22px;letter-spacing:-.4px;margin:4px 0 6px}.desc{font-size:12px;line-height:1.45;color:var(--muted);margin:0 0 16px}.subhead{font-size:11px;color:#66766d;text-transform:uppercase;letter-spacing:1.2px;font-weight:850;margin:21px 0 10px}.meta{font-size:11px;color:var(--muted)}.label-value{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 10px}.label-value strong{font-size:13px}.label-value small{font-size:12px;color:var(--muted)}.section{padding:12px 0 6px;border-bottom:1px solid #edf0e9}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.row.between{justify-content:space-between}.stack{display:grid;gap:8px}.pill{display:inline-flex;align-items:center;gap:6px;background:var(--soft);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:650;color:#325c4c}.strip-editor{position:relative;display:flex;height:105px;min-width:0;border:1px solid #9ba9a0;border-radius:11px;overflow:hidden;touch-action:none;background:#eee}.strip{position:relative;min-width:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;border-right:1px solid #ffffffb0;cursor:pointer;font-size:16px;user-select:none;color:#304038;text-shadow:0 1px #ffffff80}.strip.selected{outline:3px solid #183e34;outline-offset:-3px;z-index:1}.strip .stwidth{font-size:10px;background:#ffffffe0;border-radius:4px;padding:3px 4px;text-shadow:none;font-weight:850}.strip .sticon{font-size:19px;pointer-events:none}.resize-handle{width:16px;height:100%;position:absolute;right:-7px;top:0;z-index:4;cursor:ew-resize;touch-action:none;display:flex;align-items:center;justify-content:center}.resize-handle:after{content:'';width:5px;height:36px;border:1px solid #426859;background:#fffefa;border-radius:5px;box-shadow:0 1px 3px #102b282f}.strip:last-child .resize-handle{display:none}.lane-list{display:grid;gap:6px;margin-top:13px}.lane-row{display:flex;align-items:center;gap:7px;padding:6px;background:#f7f8f3;border:1px solid #e1e7dd;border-radius:11px;font-size:12px}.lane-row.active{border-color:#3b836a;background:#edf5ed}.grip{touch-action:none;cursor:grab;border:0;background:transparent;padding:8px 5px;color:#87968e;font-size:17px;user-select:none}.lane-bullet{width:24px;height:24px;display:grid;place-items:center;border-radius:7px;font-size:15px;flex:none}.lane-row .grow{flex:1;min-width:0}.lane-row b{font-size:12px}.lane-row small{display:block;font-size:10px;color:var(--muted)}.lane-row.drag-target{border:2px dashed var(--accent)}.lane-row .inline-btn{border:0;background:transparent;color:#516f60;padding:6px;font-size:17px}.divider{height:1px;background:var(--line);margin:17px 0}.select{border:1px solid #cbd7c9;border-radius:9px;padding:9px 10px;background:white;color:var(--ink);width:100%;font-size:13px}.toggle-line{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:11px 0}.toggle-line input{accent-color:var(--green);height:18px;width:18px}.form-label{font-size:12px;font-weight:750;color:#344e43;margin:5px 0 8px;display:block}.slider-line{display:flex;align-items:center;gap:10px}.slider-line input{flex:1;min-width:0;accent-color:var(--green);height:24px}.metric{background:var(--soft);border-radius:7px;padding:7px 8px;font-weight:850;font-size:12px;min-width:53px;text-align:center;font-variant-numeric:tabular-nums}.plot-editor{display:flex;width:100%;height:112px;overflow:hidden;border:1px solid #a7b5aa;border-radius:10px;touch-action:none}.plot-segment{position:relative;min-width:0;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:10px 0;font-weight:750;font-size:11px;overflow:visible;border-right:1px solid #ffffff91;text-shadow:0 1px #ffffffab}.plot-segment.active{outline:3px solid #225d49;outline-offset:-3px;z-index:2}.plot-segment small{background:#ffffffe5;border-radius:5px;padding:2px 3px;font-size:9px;white-space:nowrap}.plot-segment .plot-icon{font-size:17px}.plot-segment .resize-handle{right:-8px}.plot-segment:last-child .resize-handle{display:none}.side-pick{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.side-btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px;font-weight:760;color:var(--muted)}.side-btn.active{background:var(--green);color:white;border-color:var(--green)}.palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.building-choice{min-width:0;text-align:left;display:flex;align-items:center;gap:9px;padding:9px;border:1px solid #d9e0d8;border-radius:10px;background:#fff;cursor:pointer;font-weight:650;font-size:11px;touch-action:pan-y}.building-choice.active{border-color:#2c7961;background:#eaf2e9}.swatch{width:29px;height:29px;border-radius:7px;border:1px solid #0000000b;flex:none;display:grid;place-items:center;font-size:14px}.focus-card{padding:12px;background:#f4f6ef;border:1px solid #e0e5d9;border-radius:12px;margin:13px 0}.focus-card h3{font-size:15px;font-family:Georgia,serif;font-weight:600;margin:0 0 5px}.stepper{display:flex;gap:8px;align-items:center}.stepper button{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:white;font-size:19px}.stepper b{min-width:36px;text-align:center;font-size:18px}.field{margin:13px 0}.field p{margin:4px 0 8px;font-size:11px;color:var(--muted)}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid #d4ddd3;background:#fff;border-radius:12px;padding:9px 10px;font-weight:650;font-size:12px;color:#617269;display:flex;gap:7px;align-items:center}.chip.on{border-color:#4d8868;background:#e5efe3;color:#214e37}.plant-list{display:grid;gap:7px}.plant-option{display:flex;gap:10px;align-items:center;border:1px solid var(--line);padding:10px;border-radius:10px;background:white;font-size:12px}.plant-option input{accent-color:var(--green);width:18px;height:18px}.plant-option span{font-size:20px}.plant-option small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.saved-row{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px;margin:8px 0}.saved-row .grow{flex:1;min-width:0}.saved-row strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.saved-row small{font-size:10px;color:var(--muted)}.saved-row button{padding:7px 9px}.notice{background:#f1f5ee;border:1px solid #dce5d8;padding:11px;border-radius:9px;color:#4d6155;font-size:11px;line-height:1.5}.ghost{opacity:.55}.mobile-only{display:none}.toast-undo{border:1px solid #b2c6bb;background:transparent;color:#fff;font-weight:800;font-size:14px;padding:5px 10px;border-radius:7px;min-height:34px;cursor:pointer}.toast{display:none;align-items:center;gap:14px;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;background:#213d32;color:white;padding:10px 14px;border-radius:9px;font-weight:650;font-size:12px;box-shadow:0 10px 25px #0002;display:none;max-width:90vw;text-align:center}@media(max-width:800px){.app{height:100dvh;min-height:0;display:flex;flex-direction:column}.top{min-height:54px;padding:6px 11px;flex:none}.brandmark{width:30px;height:30px}.brand h1{font-size:18px}.brand small{font-size:8px}.header-actions .tiny-btn.hide-mobile{display:none}.viewer{height:43dvh;min-height:210px;flex:none}.viewer-label{top:9px;left:10px;padding:6px 9px}.viewer-label strong{font-size:14px}.viewer-label span{font-size:10px}.viewer-corner{bottom:9px;left:10px;font-size:10px}.viewer-status{bottom:9px;right:10px;font-size:9px}.control{flex:1;min-height:0;border-left:0;border-top:1px solid #d1dbd0}.panel{padding:11px 13px 70px}.tabs{padding:6px}.tab{padding:10px 2px}.section-heading{font-size:20px}.mobile-only{display:initial}.palette{grid-template-columns:repeat(2,1fr)}.toast{bottom:15px}}@media(max-height:650px) and (max-width:800px){.viewer{height:35dvh;min-height:160px}}@media(min-width:801px){.viewer{height:calc(100dvh - 57px);min-height:550px}.control{height:calc(100dvh - 57px)}}
+
+/* Sparse mobile editor: icons carry actions; labels carry measurements. */
+.ui-icon{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ui-icon circle{fill:currentColor;stroke:none}
+.brand h1{font-size:22px;letter-spacing:-.5px}.brandmark{font-size:22px}
+.top{padding:9px 14px;min-height:57px}
+.header-actions{gap:6px}.tiny-btn,.icon-action{width:44px;height:44px;min-width:44px;min-height:44px;padding:0!important;display:inline-flex;align-items:center;justify-content:center;position:relative;border-radius:11px;background:#fff}
+.count{position:absolute;right:-3px;top:-5px;background:var(--green);color:white;border-radius:50%;font-size:11px;min-width:17px;padding:2px 3px;font-weight:800}
+.count:empty{display:none}
+.viewer-label{top:12px;left:12px;padding:7px 11px}.viewer-label strong{font-size:16px}
+.viewer-corner{left:12px;bottom:12px;font-size:12px}.viewer-status{display:none}
+.tabs{padding:6px;gap:5px}.tab{min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:650;border-radius:11px;padding:5px}.tab .ui-icon{width:22px;height:22px}
+.panel{padding:15px 16px 40px}.label-value{margin:2px 0 10px}.label-value strong{font-size:16px;font-weight:650}
+.metric{font-size:14px;min-width:62px;padding:7px 8px}.form-label{font-size:14px;font-weight:650;margin:0 0 6px}
+.strip-editor{height:96px}.strip .sticon{font-size:18px}.strip .stwidth{font-size:11px;line-height:1.1}
+.resize-handle{width:22px;right:-11px}.resize-handle:after{width:6px;height:39px;box-shadow:0 0 0 2px #ffffffa8}
+.row.addrow{display:flex;align-items:center;margin:12px 0 14px;gap:7px;flex-wrap:nowrap}
+.addrow .select{flex:1;min-width:0;width:0;min-height:44px;font-size:14px}
+
+
+.lane-size{margin:9px 0 16px}.slider-line{gap:12px}.slider-line input{height:38px;touch-action:pan-y;cursor:ew-resize}
+.lane-list{gap:7px;margin-top:9px}.lane-row{padding:4px 6px;min-height:52px;font-size:14px}.lane-row b{font-size:14px}.lane-row small{font-size:12px}.lane-row .grow{padding:6px 2px;cursor:pointer}
+.lane-bullet{width:33px;height:33px;font-size:19px}.grip{width:37px;height:43px;display:grid;place-items:center;padding:0}
+.lane-row .inline-btn{width:42px;height:43px;padding:0}.lane-row .inline-btn .ui-icon{width:19px;height:19px}
+.side-pick{margin:0 0 11px;gap:8px}.side-btn{font-size:15px;min-height:44px}
+.plot-editor{height:100px;margin-bottom:10px}.plot-segment small{font-size:10px}.plot-actions{gap:8px;margin:0 0 12px!important}
+.focus-card{margin:8px 0 14px;padding:12px;border:1px solid #e0e5d9}.focus-title{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:13px;font-size:14px}.focus-title strong{font-size:16px}.focus-title span{color:#596b62}
+.field{margin:11px 0 13px}.stepper-field{display:flex;align-items:center;justify-content:space-between}.stepper button{height:44px;width:44px;font-size:22px}.stepper b{font-size:17px}
+.extras{display:flex;gap:18px;flex-wrap:wrap}.extras .toggle-line{font-size:14px;gap:8px;justify-content:flex-start;padding:7px 0}
+.palette{gap:8px}.building-choice{font-size:13px;min-height:53px;line-height:1.2;padding:7px}.swatch{width:34px;height:34px;font-size:19px}
+.plant-modes{display:flex;gap:7px;margin-bottom:18px}.chip{flex:1;min-width:0;min-height:46px;border-radius:11px;justify-content:center;font-size:13px;padding:7px 4px}
+.plant-group{margin:12px 0 18px}.plant-group-label{font-size:16px;font-weight:650;margin:0 0 8px}
+.plant-list{display:grid;grid-template-columns:1fr 1fr;gap:7px}.plant-option{min-height:51px;padding:7px 8px;gap:7px;font-size:13px}.plant-option b{font-weight:600}.plant-option span{font-size:18px}.plant-option input{flex:none}
+.intervals{margin-top:15px}.intervals .field{margin:6px 0 13px}.zebra-toggle{font-size:14px;justify-content:space-between}
+.save-editor{display:flex;gap:8px;margin-bottom:10px}.save-editor input{width:0;flex:1;font-size:16px;min-height:44px}
+.layout-actions{margin-bottom:20px;gap:9px}.saved-row{padding:9px;font-size:15px}.saved-row strong{font-size:15px}.saved-row small{font-size:12px}.empty-state{font-size:14px;color:var(--muted);text-align:center;padding:15px}
+@media(max-width:800px){.top{min-height:56px;padding:6px 10px}.brand{gap:7px}.brand h1{font-size:19px}.brandmark{width:32px;height:32px}.viewer{height:43dvh}.panel{padding:13px 13px 65px}.tabs{padding:5px}.tab{min-height:53px;font-size:12px}.viewer-label strong{font-size:15px}.viewer-corner{font-size:11px}.plot-segment{font-size:10px}.lane-list{margin-top:10px}}
+@media(max-width:360px){.brand h1{font-size:17px}.header-actions .tiny-btn{min-width:40px;width:40px}.plant-list{grid-template-columns:1fr}.building-choice{font-size:12px}}
+@media(max-height:560px) and (max-width:800px){.viewer{height:40dvh;min-height:140px}.tab{min-height:46px}}
+
+/* One scrollable, touch-friendly section replaces the duplicated vertical lane list. */
+.lane-viewport{width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:#a6b6aa transparent;border:1px solid #9eada8;border-radius:12px;background:#e7e9df}
+.lane-viewport::-webkit-scrollbar{height:5px}.lane-viewport::-webkit-scrollbar-thumb{background:#a6b6aa;border-radius:5px}
+.lane-viewport .strip-editor{border:0;border-radius:0;overflow:visible;min-width:100%;width:max-content;height:106px;touch-action:pan-x}
+.lane-viewport .strip{flex:none!important;touch-action:pan-x;border-right:2px solid #ffffffcf;outline-offset:-3px;gap:5px}
+.lane-viewport .strip.selected{outline:3px solid #245f4b;z-index:3}
+.lane-viewport .strip.drop-target{outline:3px dashed #c76527;z-index:4}
+.lane-viewport .strip .sticon{font-size:23px}.lane-viewport .strip .stwidth{font-size:13px;font-weight:850}
+.lane-viewport .strip .resize-handle{right:-12px;width:24px;z-index:8;touch-action:none}
+.lane-viewport .strip .resize-handle:after{width:6px;height:42px;background:#fffcf5;box-shadow:0 0 0 2px #234f43}
+.lane-grip{position:absolute;top:2px;left:50%;transform:translateX(-50%);border:0;background:#ffffffc8;border-radius:6px;padding:3px 7px;min-width:32px;height:30px;display:grid;place-items:center;cursor:grab;touch-action:none;z-index:6}
+.lane-grip .ui-icon{width:19px;height:19px}
+.lane-selected{margin:12px 0 10px;background:#f4f7f1;border:1px solid #dce5d9;border-radius:12px;padding:10px 11px}
+.lane-selected-top{display:flex;align-items:center;gap:7px;min-height:44px}
+.lane-selected-top strong{font-size:15px;font-weight:650;flex:1;min-width:0}
+.lane-selected-top .metric{font-size:14px}
+.lane-action{border:1px solid #d0dad0;background:white;border-radius:9px;width:42px;height:42px;flex:none;display:grid;place-items:center;padding:0;touch-action:manipulation}
+.lane-action .ui-icon{width:20px;height:20px}.lane-action.danger{color:#a34e43}
+.lane-selected .slider-line{margin-top:7px}
+.lane-add{display:flex;align-items:center;gap:8px;margin:10px 0}.lane-add .select{width:0;flex:1;min-height:44px;font-size:14px}
+.lane-add 
+.lane-scroll-hint{font-size:12px;color:#6f8072;position:relative;padding-left:1px}
+@media(max-width:800px){.lane-viewport .strip-editor{height:100px}.lane-selected-top strong{font-size:14px}.lane-selected{padding:9px}.lane-action{width:40px;height:40px}.lane-add{gap:6px}}
+@media(max-width:360px){.lane-selected-top{gap:5px}.lane-action{width:38px;height:40px}}
+
+/* Frontage edit rail: metrically scaled, horizontally scrollable on small screens. */
+.plot-viewport{width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;border-radius:12px;border:1px solid #9eafa0;scrollbar-width:thin;scrollbar-color:#a6b6aa transparent;background:#e7e9df;margin-bottom:11px}
+.plot-viewport::-webkit-scrollbar{height:5px}.plot-viewport::-webkit-scrollbar-thumb{background:#a6b6aa;border-radius:5px}
+.plot-viewport .plot-editor{width:max-content;min-width:100%;height:109px;border:0;border-radius:0;overflow:visible;margin:0;touch-action:pan-x}
+.plot-viewport .plot-segment{flex:none!important;touch-action:pan-x;gap:2px;padding:6px 0 5px;justify-content:space-around}
+.plot-viewport .plot-segment.active{outline:3px solid #245f4b;z-index:2}
+.plot-viewport .plot-icon{font-size:22px;line-height:1}.plot-number{font-size:11px;line-height:1}
+.plot-metrics{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
+.plot-metrics b{display:block;font-size:12px;font-weight:750;background:#fffef6eb;padding:2px 4px;border-radius:4px;max-width:100%}
+.plot-metrics .plot-storeys{font-size:11px;background:#e6eee3e8}
+.plot-viewport .resize-handle{right:-12px;width:24px;touch-action:none;z-index:5}
+.plot-viewport .resize-handle:after{height:40px;width:6px;box-shadow:0 0 0 2px #235342}
+.copy-frontage{display:flex;align-items:center;gap:5px;height:44px;font-size:13px;font-weight:650;padding:0 10px}
+.copy-frontage .ui-icon{height:20px;width:20px}
+.plot-actions{flex-wrap:nowrap}
+.arrow-icon{font-family:Arial,sans-serif;font-size:26px;line-height:1;font-weight:600;display:inline-block;color:#295e4a}
+.lane-action:disabled .arrow-icon{color:#88968e}
+.lane-add{justify-content:flex-start}
+.lane-palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 16px}
+.lane-palette-choice{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:0;min-height:49px;border:1px solid #d5dfd4;border-radius:10px;background:#fff;font-size:13px;font-weight:650;padding:7px 8px;text-align:left;color:var(--ink)}
+.lane-palette-symbol{display:grid;place-items:center;min-width:29px;height:29px;background:var(--strip-color);border-radius:7px;font-size:17px}
+@media(max-width:390px){.lane-palette{grid-template-columns:repeat(2,minmax(0,1fr))}.plot-actions{gap:6px}}
+
+.lane-viewport .strip[data-kind="traffic"],.lane-viewport .strip[data-kind="parking"],.lane-viewport .strip[data-kind="bus"]{color:#fff;text-shadow:0 1px 3px #243734a0}
+.lane-viewport .strip .stwidth{color:#1e3330;background:#fffef2ee;text-shadow:none}
+.lane-palette-choice{border-color:#bfcac0}
+.lane-palette-symbol{box-shadow:inset 0 0 0 1px #26383128}
+
+.lane-plants{margin-top:12px;padding-top:12px;border-top:1px solid #d9e2d7}
+.lane-plants .chips{gap:6px}.lane-plants .chip{font-size:14px;padding:10px 11px;min-height:42px;justify-content:center;flex:1}
+.plant-choice-group{margin-top:13px}.plant-choice-group .field{margin:4px 0 8px}
+.plant-choice-group .form-label{font-size:14px;margin:5px 0}
+.plant-species-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.plant-species{display:flex;align-items:center;gap:5px;min-height:44px;border:1px solid #cdd9ca;background:#fff;border-radius:10px;padding:7px 8px;font-size:13px;line-height:1.2;font-weight:600;cursor:pointer}
+.plant-species.on{background:#e3eee0;border-color:#689a78}
+.plant-species input{width:17px;height:17px;margin:0 3px 0 0;accent-color:var(--green);flex:none}
+.plant-species span{font-size:15px}
+@media(max-width:360px){.lane-plants .chip{font-size:12px;padding:8px 6px}.plant-species{font-size:12px}}
+/* Explicit ink colours for light controls; avoids white-on-white text on mobile browsers. */
+:root{color-scheme:light}
+.focus-card,.focus-title,.stepper b,.plot-viewport .plot-segment,.plot-metrics b,.plot-metrics .plot-storeys{color:#23332f}
+.building-choice,.building-choice span:last-child,.building-choice.active,.building-choice.active span:last-child{color:#23332f}
+.stepper button{color:#23332f;background:#fff}
+.side-btn{color:#43564d}.side-btn.active{color:#fff}
+</style>
+<script>function loadThree(list){if(!list.length)return;const s=document.createElement('script');s.src=list[0];s.onerror=()=>loadThree(list.slice(1));document.head.appendChild(s)}</script>
+<script src="vendor/three.min.js" onerror="loadThree(['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js','https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'])"></script>
+</head>
+<body>
+<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+<symbol id="i-road" viewBox="0 0 24 24"><path d="m9 2-3 20M15 2l3 20M12 4v3m0 4v3m0 4v2"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h2m4 0h2M8 10h2m4 0h2M8 14h2m4 0h2M10 22v-4h4v4"/></symbol>
+<symbol id="i-crossing" viewBox="0 0 24 24"><path d="M3 20h18M5 4v12M10 4v12M15 4v12M20 4v12"/></symbol>
+<symbol id="i-tree" viewBox="0 0 24 24"><path d="M12 21v-7M8 21h8M8 14a5 5 0 0 1-2-9 6 6 0 0 1 11 0 5 5 0 0 1-1 9H8Z"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+<symbol id="i-folder-open" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v2"/><path d="M3 10h18a1.5 1.5 0 0 1 1.44 1.9l-2 7A2 2 0 0 1 18.52 21H5.48a2 2 0 0 1-1.92-1.1l-2-7A2 2 0 0 1 3 10Z"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M4 3h14l3 3v15H3V3Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 4h6M6 7l1 14h10l1-14M10 11v6m4-6v6"/></symbol>
+<symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M9 12h6"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h16m-7-7 7 7-7 7"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 19v3h16v-3"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 17V4m-5 5 5-5 5 5M4 19v3h16v-3"/></symbol>
+<symbol id="i-restart" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-6M4 4v5h5"/></symbol>
+<symbol id="i-open" viewBox="0 0 24 24"><path d="M4 4h9v4H4v12h16V11M11 13l9-9m-6 0h6v6"/></symbol>
+<symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="19" r="1"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H4m7 7-7-7 7-7"/></symbol>
+<symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 7a4 4 0 0 1 4-4h10l-3-2m3 2-3 3M20 17a4 4 0 0 1-4 4H6l3 2m-3-2 3-3"/><path d="M8 9h8v6H8z"/></symbol>
+</defs></svg>
+<div class="app">
+<header class="top"><div class="brand"><div class="brandmark">≋</div><h1>Street Studio</h1></div><div class="header-actions"><button class="tiny-btn hide-mobile" id="resetView" aria-label="Reset view" title="Reset view"><svg class="ui-icon"><use href="#i-restart"/></svg></button><button class="tiny-btn" id="saveQuick" aria-label="Save layout" title="Save layout"><svg class="ui-icon"><use href="#i-save"/></svg></button><button class="tiny-btn" id="openLayouts" aria-label="Open saved layouts" title="Open saved layouts"><svg class="ui-icon"><use href="#i-folder-open"/></svg><span class="count" id="saveCount">0</span></button></div></header>
+<main class="viewer" id="viewport"><div class="viewer-label"><strong id="sceneName">Leafy avenue</strong></div><div class="viewer-corner"><b id="roadWidth">—</b> street width · <b id="plotCount">20</b> plots</div><div class="viewer-fallback" id="viewerFallback"><div><strong>3D view unavailable</strong>The 3D renderer could not start in this browser. The editors and saved layouts still work.</div></div></main>
+<aside class="control"><nav class="tabs" id="tabs"><button class="tab active" data-tab="street" aria-label="Street section" title="Street section"><svg class="ui-icon"><use href="#i-road"/></svg><span>Street</span></button><button class="tab" data-tab="frontage" aria-label="Building frontages" title="Building frontages"><svg class="ui-icon"><use href="#i-building"/></svg><span>Plots</span></button><button class="tab" data-tab="planting" aria-label="Zebra crossings" title="Zebra crossings"><svg class="ui-icon"><use href="#i-crossing"/></svg><span>Crossings</span></button><button class="tab" data-tab="layouts" aria-label="Saved layouts" title="Saved layouts"><svg class="ui-icon"><use href="#i-folder-open"/></svg><span>Saves</span></button></nav><div class="panel" id="panel"></div></aside>
+</div><div class="toast" id="toast"></div>
+<script>
+'use strict';
+const LENGTH=120, MAX_PLOTS=20, MAX_PLOT_WIDTH=24, MIN_PLOT_WIDTH=4;
+const STOREY_HEIGHT=3.15, BUILDING_DEPTH=9.2;
+const LANE={pavement:{label:'Pavement',icon:'▤',min:2,def:3,max:12,color:'#d7c5aa',surface:0xcbbea5},planting:{label:'Planting',icon:'🌳',min:1.5,def:2.2,max:12,color:'#78b577',surface:0x669e65},cycle:{label:'Cycle track',icon:'🚲',min:1.5,def:2,max:6,color:'#64b8ad',surface:0x55a397},traffic:{label:'Traffic lane',icon:'↟',min:2.75,def:3.2,max:7,color:'#798890',surface:0x65757d},bus:{label:'Bus lane',icon:'🚌',min:3,def:3.5,max:7,color:'#cf8979',surface:0xb66e62},tram:{label:'Tram track',icon:'🚋',min:3.5,def:3.8,max:7,color:'#b1a0ba',surface:0x91869c},parking:{label:'Parking',icon:'▣',min:2,def:2.3,max:5,color:'#8ea8c0',surface:0x819bae}};
+const BLD={victorian:{label:'Victorian brick house',icon:'▥',color:'#b85b47',wall:0xb65b46,trim:0xe9dcc4,roof:0x585d62,stories:3,setback:2},haussmann:{label:'Limestone apartment',icon:'▤',color:'#d6c6a0',wall:0xd3c39b,trim:0xf2e7cf,roof:0x526269,stories:5,setback:0},stucco:{label:'Mid-century stucco',icon:'▣',color:'#e0bd9b',wall:0xddbea6,trim:0xf3dfc9,roof:0xb1aaa0,stories:4,setback:2},office:{label:'Glass office',icon:'▦',color:'#a2b9b6',wall:0x9ab4b1,trim:0xdce7e0,roof:0x73888e,stories:7,setback:0},warehouse:{label:'Converted warehouse',icon:'▥',color:'#9a5b4b',wall:0x9a5945,trim:0xccc0a9,roof:0x6c6865,stories:3,setback:0},modern:{label:'Contemporary apartment',icon:'▦',color:'#cbbfb3',wall:0xbebdb5,trim:0xf5f1e4,roof:0x777b75,stories:5,setback:1},townhouse:{label:'Painted townhouse',icon:'▥',color:'#c7c9b0',wall:0xc5ccb3,trim:0xf5eee1,roof:0x777070,stories:3,setback:3},artdeco:{label:'Art Deco apartment',icon:'▤',color:'#b9ad94',wall:0xc8b496,trim:0xeee1c8,roof:0x858476,stories:5,setback:0},alley:{label:'Alley / passage',icon:'⇢',color:'#c6c8c3',stories:0,setback:0},open:{label:'Open plot',icon:'☘',color:'#a3c7a1',stories:0,setback:0}};
+const TREES={plane:{label:'London plane',detail:'Broad, spreading crown'},lime:{label:'Small-leaved lime',detail:'Rounded, dense canopy'},birch:{label:'Silver birch',detail:'Light, slender form'},rowan:{label:'Rowan',detail:'Smaller, airy canopy'},hornbeam:{label:'Hornbeam',detail:'Tidy oval crown'},jacaranda:{label:'Jacaranda',detail:'Wide, feathery, lilac blossom'},ash:{label:'Ash (fresno)',detail:'Tall, open crown'},palm:{label:'Canary palm',detail:'Stout stem, arching fronds'}};
+const SHRUBS={box:{label:'Box',detail:'Compact evergreen mounds'},hawthorn:{label:'Hawthorn',detail:'Flowering, hardy hedge'},lavender:{label:'Lavender',detail:'Low purple flowering'},dogwood:{label:'Dogwood',detail:'Colourful stems, foliage'},marigold:{label:'Marigold',detail:'Low orange bedding'},bougainvillea:{label:'Bougainvillea',detail:'Sprawling magenta bracts'}};
+let uid=0;const id=()=> 'p'+(++uid)+'_'+Math.random().toString(36).slice(2,6);const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));const snap=(n,s=.1)=>Math.round(n/s)*s;const fmt=n=>(Math.round(n*10)/10).toFixed(1)+'m';
+const defaultLanePlanting=()=>({mode:'mixed',trees:['plane','lime','birch'],shrubs:['box','lavender'],treeEvery:8,shrubEvery:.75});
+const makeLane=(kind,w)=>({id:id(),kind,w:w??LANE[kind].def,direction:1,...(kind==='planting'?{planting:defaultLanePlanting()}:{})});
+const makePlot=(kind,w,side)=>({id:id(),kind,w,stories:BLD[kind].stories,setback:BLD[kind].setback,lightwell:false,stoop:kind==='victorian'||kind==='townhouse'});
+function defaults(){let left=['victorian','victorian','haussmann','haussmann','warehouse','townhouse','modern','haussmann','stucco','office'];let right=['townhouse','haussmann','haussmann','stucco','modern','office','warehouse','victorian','townhouse','artdeco'];return {version:2,name:'Leafy avenue',length:LENGTH,sym:false,lanes:[makeLane('pavement',3),makeLane('planting',2),makeLane('cycle',2),makeLane('traffic',3.2),makeLane('traffic',3.2),makeLane('cycle',2),makeLane('planting',2),makeLane('pavement',3)],frontages:{left:left.map(t=>makePlot(t,12,'left')),right:right.map(t=>makePlot(t,12,'right'))},planting:{mode:'mixed',crossingsEnabled:true,trees:['plane','lime','birch'],shrubs:['box','lavender'],treeEvery:8,shrubEvery:0.75,crossingEvery:60}}}
+// Built-in library of starting streets. Lanes run left to right; each side's plots add up to the 120 m street length.
+function libStreet(name,lanes,left,right,crossingEvery=60){
+ const plots=a=>a.map(([kind,w,stories,setback])=>{const q=makePlot(kind,w);if(stories!=null)q.stories=stories;if(setback!=null)q.setback=setback;return q});
+ return {version:2,name,length:LENGTH,sym:false,lanes:lanes.map(([kind,w,pl])=>{const l=makeLane(kind,w);if(pl)Object.assign(l.planting,pl);return l}),frontages:{left:plots(left),right:plots(right)},planting:{...defaults().planting,crossingsEnabled:crossingEvery>0,crossingEvery:crossingEvery||60}}}
+const LIBRARY=[
+ {id:'lib_avenue',name:'Leafy avenue',about:'mixed frontages, cycle tracks',build:defaults},
+ {id:'lib_terrace',name:'Victorian terrace street',about:'brick houses, kerbside parking',build:()=>libStreet('Victorian terrace street',
+  [['pavement',2.2],['planting',1.5,{mode:'trees',trees:['rowan','birch'],treeEvery:12}],['parking',2],['traffic',2.9],['traffic',2.9],['parking',2],['pavement',2.4]],
+  [['victorian',12,2],['victorian',12,2],['victorian',12,3],['victorian',12,3],['victorian',12,2],['victorian',12,2],['victorian',12,3],['victorian',12,2],['victorian',12,2],['victorian',12,3]],
+  [['victorian',12,3],['victorian',12,2],['victorian',12,2],['alley',4],['victorian',12,2],['victorian',12,3],['victorian',12,3],['victorian',12,2],['open',8],['victorian',12,2],['victorian',12,2]],120)},
+ {id:'lib_boulevard',name:'Parisian boulevard',about:'limestone blocks, plane trees, bus lanes',build:()=>libStreet('Parisian boulevard',
+  [['pavement',5],['planting',2.5,{mode:'trees',trees:['plane'],treeEvery:9}],['bus',3.3],['traffic',3.1],['traffic',3.1],['bus',3.3],['planting',2.5,{mode:'trees',trees:['plane'],treeEvery:9}],['pavement',5]],
+  [['haussmann',15,6],['haussmann',18,6],['haussmann',12,6],['haussmann',20,6],['haussmann',15,5],['haussmann',16,6],['haussmann',24,6]],
+  [['haussmann',18,6],['haussmann',14,6],['haussmann',20,6],['haussmann',12,5],['haussmann',16,6],['haussmann',22,6],['haussmann',18,6]],40)},
+ {id:'lib_tram',name:'Tram high street',about:'Art Deco, shops and offices',build:()=>libStreet('Tram high street',
+  [['pavement',3.5],['planting',2,{mode:'mixed',trees:['hornbeam'],shrubs:['lavender'],treeEvery:10}],['traffic',3.2],['tram',3.8],['tram',3.8],['traffic',3.2],['cycle',2],['pavement',3.5]],
+  [['artdeco',16,5],['haussmann',12,5],['stucco',14,4],['modern',14,5],['artdeco',18,6],['alley',4],['warehouse',14,3],['office',16,6],['stucco',12,4]],
+  [['modern',16,5],['artdeco',14,5],['townhouse',10,3,0],['townhouse',10,3,0],['office',18,7],['stucco',16,4],['haussmann',14,5],['alley',4],['artdeco',18,5]],40)},
+ {id:'lib_warehouse',name:'Warehouse quarter',about:'converted brick, one-way street',build:()=>libStreet('Warehouse quarter',
+  [['pavement',2.6],['parking',2.3],['traffic',3.4],['cycle',2],['planting',1.8,{mode:'mixed',trees:['birch'],shrubs:['dogwood'],treeEvery:11}],['pavement',3]],
+  [['warehouse',20,4],['warehouse',16,5],['alley',5],['warehouse',22,4],['modern',15,6],['warehouse',18,3],['open',8],['warehouse',16,5]],
+  [['warehouse',18,5],['modern',14,6],['warehouse',24,4],['alley',4],['warehouse',20,5],['office',16,6],['warehouse',24,4]],60)},
+ {id:'lib_business',name:'Business district',about:'glass offices, buses and bikes',build:()=>libStreet('Business district',
+  [['pavement',4.5],['planting',2.2,{mode:'mixed',trees:['hornbeam'],shrubs:['box'],treeEvery:8}],['cycle',2.2],['bus',3.5],['traffic',3.2],['traffic',3.2],['bus',3.5],['cycle',2.2],['planting',2.2,{mode:'mixed',trees:['hornbeam'],shrubs:['box'],treeEvery:8}],['pavement',4.5]],
+  [['office',24,9],['office',20,12],['modern',16,8],['open',10],['office',24,10],['artdeco',14,7],['office',12,8]],
+  [['office',22,11],['office',18,8],['alley',5],['office',24,13],['modern',15,8],['office',20,9],['artdeco',16,6]],40)},
+ {id:'lib_pastel',name:'Pastel terrace',about:'painted townhouses, rowan and birch',build:()=>libStreet('Pastel terrace',
+  [['pavement',2.5],['planting',1.8,{mode:'mixed',trees:['rowan','birch'],shrubs:['lavender'],treeEvery:10}],['parking',2.1],['traffic',3],['traffic',3],['parking',2.1],['planting',1.8,{mode:'mixed',trees:['rowan','birch'],shrubs:['lavender'],treeEvery:10}],['pavement',2.5]],
+  [['townhouse',12,3],['townhouse',12,4],['townhouse',12,3],['townhouse',12,3],['townhouse',12,4],['townhouse',12,3],['townhouse',12,3],['townhouse',12,4],['townhouse',12,3],['townhouse',12,3]],
+  [['townhouse',15,3],['townhouse',10,4],['townhouse',15,3],['townhouse',20,3],['townhouse',10,4],['townhouse',15,3],['townhouse',10,3],['townhouse',15,4],['townhouse',10,3]],60)},
+ {id:'lib_estate',name:'Mid-century estate road',about:'stucco blocks set in green space',build:()=>libStreet('Mid-century estate road',
+  [['pavement',2.4],['planting',3,{mode:'mixed',trees:['lime','birch'],shrubs:['hawthorn'],treeEvery:9,shrubEvery:1.25}],['traffic',3],['traffic',3],['parking',2.3],['pavement',2.4]],
+  [['stucco',22,4,4],['open',10],['stucco',22,5,4],['open',8],['stucco',24,4,4],['open',10],['stucco',24,4,4]],
+  [['stucco',20,4,3],['stucco',20,4,3],['open',12],['modern',18,5,2],['stucco',24,6,3],['open',6],['stucco',20,4,3]],60)}
+,
+ // Mexico City streets, drawn from site photographs.
+ {id:'cdmx_condesa',name:'CDMX · Condesa median walk',about:'footpath through a planted central median',build:()=>libStreet('CDMX · Condesa median walk',
+  [['pavement',3],['planting',1.5,{mode:'trees',trees:['ash','jacaranda'],treeEvery:14}],['parking',2.2],['traffic',3.2],['planting',2.6,{mode:'mixed',trees:['ash','jacaranda','palm'],shrubs:['bougainvillea','box'],treeEvery:10,shrubEvery:1}],['pavement',3.2],['planting',2.6,{mode:'mixed',trees:['jacaranda','ash'],shrubs:['box','bougainvillea'],treeEvery:10,shrubEvery:1}],['traffic',3.2],['parking',2.2],['planting',1.5,{mode:'trees',trees:['ash'],treeEvery:14}],['pavement',3]],
+  [['modern',24,8,0],['stucco',14,5,0],['artdeco',16,4],['modern',18,6,0],['townhouse',12,3,0],['artdeco',16,5],['stucco',20,4,0]],
+  [['artdeco',18,5],['artdeco',14,4],['stucco',16,4,0],['alley',4],['modern',20,7,0],['artdeco',16,5],['haussmann',12,3],['stucco',20,5,0]],60)},
+ {id:'cdmx_roma_avenue',name:'CDMX · Roma avenue, planted median',about:'two lanes each way, flower-bed median',build:()=>libStreet('CDMX · Roma avenue, planted median',
+  [['pavement',4],['planting',2.2,{mode:'trees',trees:['jacaranda'],treeEvery:8}],['bus',3.3],['traffic',3.1],['planting',3,{mode:'mixed',trees:['ash','palm'],shrubs:['marigold','bougainvillea'],treeEvery:12,shrubEvery:.75}],['traffic',3.1],['traffic',3.1],['parking',2.2],['planting',1.8,{mode:'trees',trees:['jacaranda','ash'],treeEvery:9}],['pavement',3.5]],
+  [['open',20],['stucco',18,5,0],['artdeco',14,4],['open',12],['modern',18,6,0],['stucco',20,4,0],['artdeco',18,5]],
+  [['artdeco',20,5],['stucco',14,6,0],['artdeco',16,4],['townhouse',10,2,0],['modern',18,7,0],['alley',4],['artdeco',18,5],['stucco',20,4,0]],60)},
+ {id:'cdmx_roma_side',name:'CDMX · Roma Norte side street',about:'one lane, parking both sides',build:()=>libStreet('CDMX · Roma Norte side street',
+  [['pavement',2.6],['planting',1.5,{mode:'mixed',trees:['ash','palm'],shrubs:['box'],treeEvery:10,shrubEvery:1.5}],['parking',2.2],['traffic',3.3],['parking',2.2],['planting',1.5,{mode:'mixed',trees:['ash','jacaranda'],shrubs:['box'],treeEvery:9,shrubEvery:1.5}],['pavement',2.6]],
+  [['modern',20,7,1],['stucco',12,3,0],['townhouse',10,2,0],['modern',16,5,0],['haussmann',14,2,3],['stucco',18,4,0],['artdeco',14,3],['townhouse',16,2,0]],
+  [['haussmann',22,2,4],['modern',14,4,0],['haussmann',16,3,2],['stucco',14,3,0],['alley',4],['artdeco',16,4],['haussmann',18,2,3],['modern',16,5,0]],60)},
+ {id:'cdmx_reforma',name:'CDMX · Paseo de la Reforma',about:'boulevard with side roads, bus lanes and towers',build:()=>libStreet('CDMX · Paseo de la Reforma',
+  [['pavement',5],['planting',4,{mode:'mixed',trees:['ash','jacaranda'],shrubs:['box'],treeEvery:7,shrubEvery:1}],['cycle',2.2],['traffic',3.1],['planting',3.5,{mode:'mixed',trees:['ash','palm'],shrubs:['box','marigold'],treeEvery:8,shrubEvery:1}],['bus',3.5],['traffic',3.2],['traffic',3.2],['planting',1.6,{mode:'shrubs',shrubs:['marigold'],shrubEvery:.5}],['traffic',3.2],['traffic',3.2],['bus',3.5],['planting',3.5,{mode:'mixed',trees:['ash','palm'],shrubs:['box','marigold'],treeEvery:8,shrubEvery:1}],['traffic',3.1],['cycle',2.2],['planting',4,{mode:'mixed',trees:['ash','jacaranda'],shrubs:['box'],treeEvery:7,shrubEvery:1}],['pavement',5]],
+  [['office',24,14],['office',20,14],['office',22,12],['open',10],['office',24,14],['modern',20,10,0]],
+  [['office',22,13],['office',24,14],['open',12],['office',20,11],['artdeco',18,7],['office',24,14]],60)}
+];
+for(const e of LIBRARY)e.note=fmt(e.build().lanes.reduce((s,l)=>s+l.w,0))+' wide · '+e.about;
+let remoteLibrary=[];
+const libraryEntries=()=>[...LIBRARY.map(e=>({id:e.id,name:e.name,note:e.note,get:e.build})),...remoteLibrary];
+// Optional: a library.json beside this page (same format as the Saves backup) adds your own layouts for every visitor.
+function loadRemoteLibrary(){if(!/^https?:$/.test(location.protocol))return;fetch('library.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(raw=>{const list=Array.isArray(raw)?raw:raw&&raw.saved;if(!Array.isArray(list))return;remoteLibrary=list.filter(s=>s&&typeof s.name==='string'&&valid(s.data)).map((s,i)=>({id:'repo_'+i,name:s.name,note:typeof s.note==='string'?s.note:'Shared layout',get:()=>s.data}));if(remoteLibrary.length&&tab==='layouts')refreshPanel()}).catch(()=>{})}
+const DRAFT='pb_street_studio_draft_v1',SAVED='pb_street_studio_layouts_v1';
+const safeGet=(k,fallback)=>{try{return JSON.parse(localStorage.getItem(k))??fallback}catch(e){return fallback}};
+let data=safeGet(DRAFT,null);if(!valid(data))data=defaults();
+function normalizePlanting(p,street=data){
+ if(!p||typeof p!=='object')p=street.planting={};
+ p.crossingsEnabled=p.crossingsEnabled!==false;
+ p.crossingEvery=clamp(Number(p.crossingEvery)||60,20,120);
+ for(const lane of street.lanes){
+  if(lane.kind!=='planting')continue;
+  const source=lane.planting&&typeof lane.planting==='object'?lane.planting:p;
+  const base=defaultLanePlanting();
+  lane.planting={
+   mode:['trees','shrubs','mixed'].includes(source.mode)?source.mode:base.mode,
+   trees:Array.isArray(source.trees)?[...new Set(source.trees.filter(k=>Object.prototype.hasOwnProperty.call(TREES,k)))]:base.trees,
+   shrubs:Array.isArray(source.shrubs)?[...new Set(source.shrubs.filter(k=>Object.prototype.hasOwnProperty.call(SHRUBS,k)))]:base.shrubs,
+   treeEvery:clamp(Number(source.treeEvery)||base.treeEvery,1,12),
+   shrubEvery:clamp(Number(source.shrubEvery)||base.shrubEvery,.25,3)
+  };
+ }
+ street.version=2;
+}
+normalizePlanting(data.planting);
+data.sym=false;
+let lanePaletteOpen=false;let tab='street',side='left',selPlot={left:0,right:0},selLane=0,renderTimer=0,frameRequested=false,scene=null,camera=null,renderer=null,world=null,materials={},last3D=0;
+const panel=document.getElementById('panel');const viewport=document.getElementById('viewport');
+function valid(a){return !!(a&&Array.isArray(a.lanes)&&a.lanes.length&&a.frontages&&Array.isArray(a.frontages.left)&&Array.isArray(a.frontages.right)&&a.planting&&a.frontages.left.length&&a.frontages.right.length&&a.lanes.every(l=>LANE[l.kind]&&Number.isFinite(l.w)))}
+function persist(){try{localStorage.setItem(DRAFT,JSON.stringify(data))}catch(e){}syncLabels()}
+function update(){persist();refreshPanel();queue3D()}
+function syncLabels(){document.getElementById('sceneName').textContent=data.name;document.getElementById('roadWidth').textContent=fmt(data.lanes.reduce((s,l)=>s+l.w,0));document.getElementById('plotCount').textContent=data.frontages.left.length+data.frontages.right.length;document.getElementById('saveCount').textContent=safeGet(SAVED,[]).length}
+function toast(s,undo){
+ const d=document.getElementById('toast');
+ d.replaceChildren(document.createTextNode(s));
+ if(typeof undo==='function'){
+  const b=document.createElement('button');
+  b.type='button';b.className='toast-undo';b.textContent='Undo';
+  b.addEventListener('click',()=>{clearTimeout(toast.t);undo();toast('Restored');});
+  d.appendChild(b);
+ }
+ d.style.display='flex';
+ clearTimeout(toast.t);
+ toast.t=setTimeout(()=>d.style.display='none',undo?7000:2600);
+}
+function refreshPanel(keepScroll=true){let y=keepScroll?panel.scrollTop:0,laneX=keepScroll?(document.getElementById('laneScroller')?.scrollLeft||0):0,plotX=keepScroll?(document.getElementById('plotScroller')?.scrollLeft||0):0;panel.innerHTML=tab==='street'?streetUI():tab==='frontage'?frontageUI():tab==='planting'?plantingUI():layoutsUI();panel.scrollTop=y;if(tab==='street'){const sc=document.getElementById('laneScroller');if(sc)sc.scrollLeft=laneX;}if(tab==='frontage'){const ps=document.getElementById('plotScroller');if(ps)ps.scrollLeft=plotX;}document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));}
+const ico=name=>`<svg class="ui-icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function stripWidth(l){return 'style="background:'+LANE[l.kind].color+';flex:'+l.w+' 1 0"'}
+const lanePixels=w=>Math.max(62,Math.round(w*42));const plotPixels=w=>Math.round(w*10);
+function streetUI(){
+ selLane=clamp(selLane,0,data.lanes.length-1);
+ const lanes=data.lanes,total=lanes.reduce((s,l)=>s+l.w,0),selected=lanes[selLane],props=LANE[selected.kind];
+ const strips=lanes.map((l,i)=>{const isSelected=i===selLane;
+ return `<div class="strip ${isSelected?'selected':''}" style="background:${LANE[l.kind].color};width:${lanePixels(l.w)}px" data-strip="${i}" data-kind="${l.kind}" role="button" tabindex="0" aria-label="${LANE[l.kind].label}, ${fmt(l.w)}" aria-pressed="${isSelected}" title="${LANE[l.kind].label}, ${fmt(l.w)}">${isSelected?`<button type="button" class="lane-grip" data-drag-lane="${i}" title="Drag to move" aria-label="Drag ${LANE[l.kind].label} to move">${ico('grip')}</button>`:''}<span class="sticon">${LANE[l.kind].icon}</span><span class="stwidth">${fmt(l.w)}</span>${isSelected?`<span class="resize-handle" data-resize-lane="${i}" role="slider" tabindex="0" aria-label="Resize ${LANE[l.kind].label}" aria-valuemin="${props.min}" aria-valuemax="${props.max}" aria-valuenow="${l.w}"></span>`:''}</div>`}).join('');
+ return `<div class="label-value"><strong>Street width</strong><span class="metric">${fmt(total)}</span></div><div class="lane-viewport" id="laneScroller"><div class="strip-editor" id="stripEditor">${strips}</div></div><div class="lane-selected"><div class="lane-selected-top"><strong>${props.icon} ${props.label}</strong><span class="metric" id="laneWidthMetric">${fmt(selected.w)}</span><button type="button" class="lane-action" data-move-lane="-1" title="Move left" aria-label="Move selected lane left" ${selLane===0?'disabled':''}><span class="arrow-icon" aria-hidden="true">←</span></button><button type="button" class="lane-action" data-move-lane="1" title="Move right" aria-label="Move selected lane right" ${selLane===lanes.length-1?'disabled':''}><span class="arrow-icon" aria-hidden="true">→</span></button><button type="button" class="lane-action danger" data-remove-lane="${selLane}" title="Remove lane" aria-label="Remove selected lane" ${lanes.length===1?'disabled':''}>${ico('trash')}</button></div><div class="slider-line"><input id="laneWidthSlider" type="range" aria-label="${props.label} width" min="${props.min}" max="${props.max}" step="0.1" value="${selected.w}"></div>${selected.kind==='planting'?plantingLaneUI(selected):''}</div><div class="lane-add"><button class="btn primary icon-action" id="addLane" title="Add a strip" aria-label="Add a strip" aria-expanded="${lanePaletteOpen}">${ico('plus')}</button></div>${lanePaletteOpen?`<div class="lane-palette">${Object.entries(LANE).map(([k,l])=>`<button class="lane-palette-choice" data-add-kind="${k}" title="Add ${l.label}" aria-label="Add ${l.label}" style="--strip-color:${l.color}"><span class="lane-palette-symbol">${l.icon}</span><span>${l.label}</span></button>`).join('')}</div>`:''}`;
+}
+function frontageUI(){const arr=data.frontages[side];selPlot[side]=clamp(selPlot[side],0,arr.length-1);const p=arr[selPlot[side]],b=BLD[p.kind];return `<div class="side-pick"><button data-side="left" class="side-btn ${side==='left'?'active':''}" aria-label="Left frontage" title="Left frontage">← Left</button><button data-side="right" class="side-btn ${side==='right'?'active':''}" aria-label="Right frontage" title="Right frontage">Right →</button></div><div class="label-value"><strong>${arr.length} / ${MAX_PLOTS} plots</strong><span class="metric">${LENGTH}m</span></div><div class="plot-viewport" id="plotScroller"><div class="plot-editor" id="plotEditor">${arr.map((q,i)=>`<div data-plot="${i}" class="plot-segment ${i===selPlot[side]?'active':''}" style="background:${BLD[q.kind].color};width:${plotPixels(q.w)}px" title="${BLD[q.kind].label}, ${fmt(q.w)}, ${q.kind==='alley'||q.kind==='open'?'open':q.stories+' storeys'}" aria-label="Plot ${i+1}, ${BLD[q.kind].label}, ${fmt(q.w)}, ${q.stories} storeys" role="button" tabindex="0"><span class="plot-number">${i+1}</span><span class="plot-icon">${BLD[q.kind].icon}</span><span class="plot-metrics"><b class="plot-metres">${fmt(q.w)}</b><b class="plot-storeys">${q.kind==='alley'||q.kind==='open'?'—':q.stories+' fl'}</b></span>${i<arr.length-1?`<span class="resize-handle" data-resize-plot="${i}" role="slider" tabindex="0" aria-label="Resize plot ${i+1}" aria-valuemin="${MIN_PLOT_WIDTH}" aria-valuemax="${MAX_PLOT_WIDTH}" aria-valuenow="${q.w}"></span>`:''}</div>`).join('')}</div></div><div class="row plot-actions"><button class="btn icon-action" id="splitPlot" title="Split plot" aria-label="Split plot" ${arr.length>=MAX_PLOTS||p.w<MIN_PLOT_WIDTH*2?'disabled':''}>${ico('split')}</button><button class="btn icon-action" id="deletePlot" title="Remove plot" aria-label="Remove plot" ${arr.length<2?'disabled':''}>${ico('trash')}</button><button class="btn icon-action" id="movePlot" title="Move plot right" aria-label="Move plot right">${ico('right')}</button><button class="btn copy-frontage" id="repeatFrontage" title="Apply this building to all ${side} plots; keep widths" aria-label="Apply selected building settings to all ${side} plots; keep widths">${ico('repeat')}<span>All</span></button></div><div class="focus-card"><div class="focus-title"><strong>Plot ${selPlot[side]+1}</strong><span>${esc(b.label)}</span></div><div class="field"><label class="form-label" for="plotWidth">Plot width</label><div class="slider-line"><input id="plotWidth" type="range" min="${MIN_PLOT_WIDTH}" max="${MAX_PLOT_WIDTH}" step=".25" value="${p.w}"><span class="metric" id="plotWidthMetric">${fmt(p.w)}</span></div></div>${p.kind!=='alley'&&p.kind!=='open'?`<div class="field stepper-field"><span class="form-label">Storeys</span><div class="stepper"><button id="storyMinus" aria-label="Remove storey" title="Remove storey">−</button><b>${p.stories}</b><button id="storyPlus" aria-label="Add storey" title="Add storey">+</button></div></div><div class="field"><label class="form-label" for="setback">Front garden / setback</label><div class="slider-line"><input type="range" id="setback" min="0" max="5" step="0.25" value="${p.setback}"><span class="metric" id="setbackMetric">${fmt(p.setback)}</span></div></div><div class="extras"><label class="toggle-line">Light well <input type="checkbox" id="lightwell" ${p.lightwell?'checked':''}></label><label class="toggle-line">Stoop <input type="checkbox" id="stoop" ${p.stoop?'checked':''}></label></div>`:''}</div><div class="palette">${Object.entries(BLD).map(([k,v])=>`<button class="building-choice ${p.kind===k?'active':''}" data-building="${k}" title="${esc(v.label)}" aria-label="Set building to ${esc(v.label)}"><span class="swatch" style="background:${v.color}">${v.icon}</span><span>${esc(v.label)}</span></button>`).join('')}</div>`}
+function plantingLaneUI(lane){
+ const x=lane.planting,trees=x.mode!=='shrubs',shrubs=x.mode!=='trees';
+ const modes=[['trees','🌳','Trees'],['shrubs','🌿','Shrubs'],['mixed','🌳🌿','Mixed']];
+ const spacing=(key,label,min,max,step)=>`<div class="field"><label class="form-label" for="lane_${key}">${label}</label><div class="slider-line"><input id="lane_${key}" data-lane-spacing="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${x[key]}"><span class="metric" id="metric_lane_${key}">${fmt(x[key])}</span></div></div>`;
+ const plants=(list,selected,attr,icon)=>`<div class="plant-species-grid">${Object.entries(list).map(([k,v])=>`<label class="plant-species ${selected.includes(k)?'on':''}"><input type="checkbox" ${attr}="${k}" ${selected.includes(k)?'checked':''}><span aria-hidden="true">${icon}</span>${esc(v.label)}</label>`).join('')}</div>`;
+ return `<div class="lane-plants"><div class="chips plant-modes">${modes.map(([k,ic,n])=>`<button type="button" class="chip ${x.mode===k?'on':''}" data-lane-mode="${k}" title="${n}" aria-label="${n}" aria-pressed="${x.mode===k}">${ic} ${n}</button>`).join('')}</div>${trees?`<div class="plant-choice-group">${spacing('treeEvery','Trees every',1,12,1)}${plants(TREES,x.trees,'data-lane-tree','🌳')}</div>`:''}${shrubs?`<div class="plant-choice-group">${spacing('shrubEvery','Shrubs every',.25,3,.25)}${plants(SHRUBS,x.shrubs,'data-lane-shrub','🌿')}</div>`:''}</div>`;
+}
+function plantingUI(){const x=data.planting;return `<div class="intervals"><label class="toggle-line zebra-toggle">Zebra crossings <input type="checkbox" id="crossingsEnabled" ${x.crossingsEnabled!==false?'checked':''}></label>${x.crossingsEnabled!==false?`<div class="field"><label class="form-label" for="crossingEvery">Every</label><div class="slider-line"><input id="crossingEvery" data-spacing="crossingEvery" type="range" min="20" max="120" step="5" value="${x.crossingEvery}"><span class="metric" id="metric_crossingEvery">${fmt(x.crossingEvery)}</span></div></div>`:''}</div>`}
+
+function layoutsUI(){let saves=safeGet(SAVED,[]);return `<div class="save-editor"><input class="select" type="text" id="layoutName" aria-label="Layout name" placeholder="Layout name" maxlength="80" value="${esc(data.name)}"><button class="btn primary icon-action" id="saveLayout" title="Save layout" aria-label="Save layout">${ico('save')}</button></div><div class="row layout-actions"><button class="btn icon-action" id="newLayout" title="New street" aria-label="New street">${ico('plus')}</button><button class="btn icon-action" id="exportLayouts" title="Back up layouts" aria-label="Back up layouts">${ico('download')}</button><button class="btn icon-action" id="importLayouts" title="Import layouts" aria-label="Import layouts">${ico('upload')}</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div><div class="subhead">Your saves</div>${saves.length?saves.sort((a,b)=>b.updated-a.updated).map(s=>`<div class="saved-row"><div class="grow"><strong>${esc(s.name)}</strong><small>${new Date(s.updated).toLocaleDateString()}</small></div><button class="btn icon-action" data-load="${esc(s.id)}" title="Open ${esc(s.name)}" aria-label="Open ${esc(s.name)}">${ico('folder-open')}</button><button class="btn danger icon-action" data-del="${esc(s.id)}" title="Delete ${esc(s.name)}" aria-label="Delete ${esc(s.name)}">${ico('trash')}</button></div>`).join(''):'<p class="empty-state">No saved layouts</p>'}<div class="subhead">Library</div>${libraryEntries().map(e=>`<div class="saved-row"><div class="grow"><strong>${esc(e.name)}</strong><small>${esc(e.note)}</small></div><button class="btn icon-action" data-lib="${esc(e.id)}" title="Open ${esc(e.name)}" aria-label="Open ${esc(e.name)} from the library">${ico('folder-open')}</button></div>`).join('')}`}
+function setTab(t){tab=t;refreshPanel(false);queue3D()}document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab)});document.getElementById('openLayouts').onclick=()=>setTab('layouts');document.getElementById('saveQuick').onclick=()=>{const name=prompt('Save this layout as:',data.name);if(name!==null)saveNamed(name)};document.getElementById('resetView').onclick=()=>{if(camera)setupCamera();queue3D()};
+function canonicalLane(i){return i}
+function setLaneWidth(i,value){const lane=data.lanes[i];if(!lane)return;lane.w=snap(clamp(value,LANE[lane.kind].min,LANE[lane.kind].max))}
+function moveLane(a,b){const lanes=data.lanes;if(a===b||a<0||b<0||a>=lanes.length||b>=lanes.length)return;const [lane]=lanes.splice(a,1);lanes.splice(b,0,lane);selLane=b;update();revealLane()}
+function removeLane(i){if(data.lanes.length<=1)return;data.lanes.splice(i,1);selLane=clamp(i,0,data.lanes.length-1);update()}
+function addLane(kind){const at=selLane+1;data.lanes.splice(at,0,makeLane(kind));selLane=at;update();revealLane()}
+function changePlotWidth(i,newW,whichSide=side){const a=data.frontages[whichSide];const p=a[i];if(!p)return;newW=snap(clamp(newW,MIN_PLOT_WIDTH,MAX_PLOT_WIDTH),.25);let diff=newW-p.w;if(Math.abs(diff)<.01)return;let order=[];for(let d=1;d<a.length;d++){if(i+d<a.length)order.push(i+d);if(i-d>=0)order.push(i-d)};let remaining=Math.abs(diff);let taken=[];for(const j of order){const cap=diff>0?a[j].w-MIN_PLOT_WIDTH:MAX_PLOT_WIDTH-a[j].w;const amount=Math.min(remaining,Math.max(0,cap));if(amount>.001){taken.push({j,amount});remaining-=amount}if(remaining<.001)break;}let applied=Math.abs(diff)-remaining;if(applied<.001)return;p.w=snap(p.w+Math.sign(diff)*applied,.01);for(const x of taken)a[x.j].w=snap(a[x.j].w-Math.sign(diff)*x.amount,.01);}
+function splitPlot(){const a=data.frontages[side],p=a[selPlot[side]];if(a.length>=MAX_PLOTS||p.w<MIN_PLOT_WIDTH*2)return;const half=snap(p.w/2,.25),newP={...p,id:id(),w:snap(p.w-half,.01)};p.w=half;a.splice(selPlot[side]+1,0,newP);selPlot[side]++;update()}
+function deletePlot(){const a=data.frontages[side],i=selPlot[side];if(a.length<2)return;const snapshot=a.map(q=>({...q}));const p=a.splice(i,1)[0];let remaining=p.w;let order=[...a.keys()].sort((x,y)=>Math.abs(x-i)-Math.abs(y-i));for(const j of order){const add=Math.min(remaining,MAX_PLOT_WIDTH-a[j].w);if(add>.001){a[j].w=snap(a[j].w+add,.01);remaining-=add;}if(remaining<.001)break}if(remaining>.001){data.frontages[side]=snapshot;toast('Cannot remove: the remaining plots would exceed 24 m.');return}selPlot[side]=clamp(i,0,a.length-1);update()}
+function setBuilding(kind){const p=data.frontages[side][selPlot[side]];if(!p||!BLD[kind])return;p.kind=kind;update()}
+function repeatFrontage(){
+ const which=side,arr=data.frontages[which],source=arr[selPlot[which]];
+ if(!source)return;
+ // Building settings only: every plot retains its own identity, width and position.
+ const fields=['kind','stories','setback','lightwell','stoop'];
+ if(arr.every(p=>fields.every(k=>p[k]===source[k]))){toast('Already matching');return;}
+ const before=arr.map(p=>({...p}));
+ data.frontages[which]=arr.map(p=>({...p,...Object.fromEntries(fields.map(k=>[k,source[k]]))}));
+ update();revealPlot();
+ toast('All '+arr.length+' '+which+' plots matched',()=>{
+  data.frontages[which]=before;
+  update();
+  if(tab==='frontage'&&side===which)revealPlot();
+ });
+}
+function saveNamed(n){n=String(n).trim();if(!n){toast('Please give this layout a name.');return}const saves=safeGet(SAVED,[]);const exists=saves.find(s=>s.name.toLowerCase()===n.toLowerCase());if(exists&&!confirm('Replace saved layout “'+exists.name+'”?'))return;data.name=n;const entry={id:exists?.id||id(),name:n,updated:Date.now(),data:JSON.parse(JSON.stringify(data))};if(exists)saves[saves.indexOf(exists)]=entry;else saves.push(entry);try{localStorage.setItem(SAVED,JSON.stringify(saves));toast('Saved “'+n+'”')}catch(e){toast('Storage full — back up your layouts as JSON')}update()}
+function loadNamed(sid){const s=safeGet(SAVED,[]).find(x=>x.id===sid);if(s&&valid(s.data)){data=JSON.parse(JSON.stringify(s.data));data.sym=false;selPlot={left:0,right:0};selLane=0;normalizePlanting(data.planting);update();toast('Opened “'+s.name+'”')}}
+function loadLibrary(lid){const e=libraryEntries().find(x=>x.id===lid);if(!e)return;const d=e.get();if(!valid(d))return;const before=JSON.stringify(data);data=JSON.parse(JSON.stringify(d));data.sym=false;selPlot={left:0,right:0};selLane=0;normalizePlanting(data.planting);update();toast('Opened “'+data.name+'”',()=>{data=JSON.parse(before);selPlot={left:0,right:0};selLane=0;update()})}
+function downloadJSON(){const saves=safeGet(SAVED,[]);const content=JSON.stringify({format:'patternbook-street-studio',version:2,saved:saves,draft:data},null,2);const blob=new Blob([content],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='patternbook-street-layouts.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+async function importJSON(file){try{const raw=JSON.parse(await file.text());const entries=(raw.saved||[]).filter(s=>s&&typeof s.name==='string'&&valid(s.data));if(!entries.length)throw Error('No valid saved layouts');if(!confirm('Import '+entries.length+' layouts? Existing saved names will be kept.'))return;let local=safeGet(SAVED,[]);for(const e of entries){let name=e.name,i=2;while(local.some(x=>x.name.toLowerCase()===name.toLowerCase()))name=e.name+' ('+(i++)+')';local.push({id:id(),name,updated:Date.now(),data:(()=>{const imported=JSON.parse(JSON.stringify(e.data));imported.name=name;imported.sym=false;normalizePlanting(imported.planting,imported);return imported})()})}localStorage.setItem(SAVED,JSON.stringify(local));toast('Imported '+entries.length+' layouts');refreshPanel()}catch(e){toast('Could not import: '+e.message)}}
+let pointerDrag=null;
+function pointerStart(e,kind,index){if(e.button!==undefined&&e.button!==0)return;e.preventDefault();const target=e.target;target.setPointerCapture?.(e.pointerId);pointerDrag={kind,index,startX:e.clientX,startY:e.clientY,moved:false,baseWidth:kind==='laneWidth'?data.lanes[canonicalLane(index)].w:kind==='plotWidth'?data.frontages[side][index].w:null,total:data.lanes.reduce((s,l)=>s+l.w,0),rect:(kind==='laneWidth'?document.getElementById('stripEditor'):kind==='plotWidth'?document.getElementById('plotEditor'):null)?.getBoundingClientRect(),origSide:side,elem:target};window.addEventListener('pointermove',pointerMove);window.addEventListener('pointerup',pointerStop,{once:true});window.addEventListener('pointercancel',pointerStop,{once:true})}
+function revealPlot(){const scroll=document.getElementById('plotScroller'),selected=scroll?.querySelector('.plot-segment.active');if(!scroll||!selected)return;const left=selected.offsetLeft,right=left+selected.offsetWidth;if(left<scroll.scrollLeft+12)scroll.scrollLeft=Math.max(0,left-12);else if(right>scroll.scrollLeft+scroll.clientWidth-12)scroll.scrollLeft=right-scroll.clientWidth+12;}
+function revealLane(){const scroll=document.getElementById('laneScroller'),selected=scroll?.querySelector('.strip.selected');if(!scroll||!selected)return;const left=selected.offsetLeft,right=left+selected.offsetWidth;if(left<scroll.scrollLeft+12)scroll.scrollLeft=Math.max(0,left-12);else if(right>scroll.scrollLeft+scroll.clientWidth-12)scroll.scrollLeft=right-scroll.clientWidth+12;}
+function pointerMove(e){const d=pointerDrag;if(!d)return;const dx=e.clientX-d.startX;d.moved ||= Math.hypot(dx,e.clientY-d.startY)>5;if(d.kind==='laneWidth'){setLaneWidth(d.index,d.baseWidth+dx/42);const el=document.getElementById('stripEditor');if(el){const i=d.index,l=data.lanes[canonicalLane(i)],node=el.querySelector('.strip.selected');if(node){node.style.width=lanePixels(l.w)+'px';node.querySelector('.stwidth').textContent=fmt(l.w);node.querySelector('.resize-handle')?.setAttribute('aria-valuenow',l.w)}const metric=document.getElementById('laneWidthMetric');if(metric)metric.textContent=fmt(l.w)}syncLabels();throttled3D()}
+else if(d.kind==='plotWidth'){const scale=10;const a=data.frontages[d.origSide];let i=d.index;if(i>=a.length-1)return;const oldLeft=a[i].w,oldRight=a[i+1].w;const pair=oldLeft+oldRight;let newLeft=snap(clamp(d.baseWidth+dx/scale,Math.max(MIN_PLOT_WIDTH,pair-MAX_PLOT_WIDTH),Math.min(MAX_PLOT_WIDTH,pair-MIN_PLOT_WIDTH)),.25);a[i].w=newLeft;a[i+1].w=snap(pair-newLeft,.01);document.querySelectorAll('#plotEditor .plot-segment').forEach((node,k)=>{node.style.width=plotPixels(a[k].w)+'px';node.querySelector('.plot-metres').textContent=fmt(a[k].w)});const metric=document.getElementById('plotWidthMetric');if(metric)metric.textContent=fmt(a[selPlot[d.origSide]].w);throttled3D()}
+else if(d.kind==='laneMove'){const sc=document.getElementById('laneScroller');if(sc){const box=sc.getBoundingClientRect();if(e.clientX>box.right-26)sc.scrollLeft+=12;else if(e.clientX<box.left+26)sc.scrollLeft-=12;}const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-strip]');document.querySelectorAll('#stripEditor .strip').forEach(x=>x.classList.toggle('drop-target',x===el));if(el)d.to=+el.dataset.strip}
+else if(d.kind==='paletteMove'){const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-plot]');document.querySelectorAll('[data-plot]').forEach(x=>x.classList.toggle('drag-target',x===el));if(el)d.to=+el.dataset.plot}}
+function pointerStop(){const d=pointerDrag;pointerDrag=null;window.removeEventListener('pointermove',pointerMove);document.querySelectorAll('.drag-target,.drop-target').forEach(x=>x.classList.remove('drag-target','drop-target'));if(!d)return;if(d.kind==='laneMove'&&d.moved&&Number.isInteger(d.to))moveLane(d.index,d.to);else if(d.kind==='paletteMove'&&d.moved&&Number.isInteger(d.to)){selPlot[side]=d.to;setBuilding(d.building)}else if(d.kind==='laneWidth'||d.kind==='plotWidth')update()}
+panel.addEventListener('pointerdown',e=>{const x=e.target.closest('[data-resize-lane],[data-resize-plot],[data-drag-lane]');if(x){if(x.dataset.resizeLane!==undefined)pointerStart(e,'laneWidth',+x.dataset.resizeLane);else if(x.dataset.resizePlot!==undefined)pointerStart(e,'plotWidth',+x.dataset.resizePlot);else pointerStart(e,'laneMove',+x.dataset.dragLane);return}});
+panel.addEventListener('keydown',e=>{const segment=e.target.closest('[data-strip],[data-plot]');if(segment&&(e.key==='Enter'||e.key===' ')){e.preventDefault();segment.click()}const handle=e.target.closest('[data-resize-lane]');if(handle&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const i=+handle.dataset.resizeLane;setLaneWidth(i,data.lanes[canonicalLane(i)].w+(e.key==='ArrowRight'?.1:-.1));update()}const ph=e.target.closest('[data-resize-plot]');if(ph&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();changePlotWidth(+ph.dataset.resizePlot,data.frontages[side][+ph.dataset.resizePlot].w+(e.key==='ArrowRight'?.25:-.25));update()}});panel.addEventListener('click',e=>{const idEl=e.target.closest('[id]');const el=e.target.closest('[data-strip],[data-choose-lane],[data-add-kind],[data-move-lane],[data-remove-lane],[data-side],[data-plot],[data-building],[data-lane-mode],[data-load],[data-del],[data-lib]');if(el){if(el.dataset.strip!==undefined||el.dataset.chooseLane!==undefined){selLane=+(el.dataset.strip??el.dataset.chooseLane);refreshPanel();revealLane();queue3D();return}if(el.dataset.addKind!==undefined){addLane(el.dataset.addKind);lanePaletteOpen=false;refreshPanel();revealLane();return}if(el.dataset.moveLane!==undefined){const to=selLane+Number(el.dataset.moveLane);moveLane(selLane,to);revealLane();return}if(el.dataset.removeLane!==undefined){removeLane(+el.dataset.removeLane);return}if(el.dataset.side){side=el.dataset.side;refreshPanel();queue3D();return}if(el.dataset.plot!==undefined){if(e.target.closest('[data-resize-plot]'))return;selPlot[side]=+el.dataset.plot;refreshPanel();revealPlot();queue3D();return}if(el.dataset.building){setBuilding(el.dataset.building);return}if(el.dataset.laneMode){const lane=data.lanes[selLane];if(lane?.kind==='planting'){lane.planting.mode=el.dataset.laneMode;update()}return}if(el.dataset.lib){loadLibrary(el.dataset.lib);return}if(el.dataset.load){loadNamed(el.dataset.load);return}if(el.dataset.del){const s=safeGet(SAVED,[]),q=s.find(x=>x.id===el.dataset.del);if(q&&confirm('Delete “'+q.name+'”?')){localStorage.setItem(SAVED,JSON.stringify(s.filter(x=>x.id!==q.id)));refreshPanel();syncLabels()}return}}
+let b=e.target.closest('button');if(!b)return;switch(b.id){case'addLane':lanePaletteOpen=!lanePaletteOpen;refreshPanel();break;case'repeatFrontage':repeatFrontage();break;case'splitPlot':splitPlot();revealPlot();break;case'deletePlot':deletePlot();revealPlot();break;case'movePlot':{let arr=data.frontages[side],i=selPlot[side];if(i<arr.length-1){[arr[i],arr[i+1]]=[arr[i+1],arr[i]];selPlot[side]++;update();revealPlot()}break}case'storyMinus':case'storyPlus':{let p=data.frontages[side][selPlot[side]];p.stories=clamp(p.stories+(b.id==='storyPlus'?1:-1),1,14);update();break}case'saveLayout':saveNamed(panel.querySelector('#layoutName').value);break;case'newLayout':if(confirm('Start a new default street? Your named saves will remain.')){data=defaults();data.name='New street';update();setTab('street')}break;case'exportLayouts':downloadJSON();break;case'importLayouts':document.getElementById('importFile').click();break;}});
+panel.addEventListener('input',e=>{const v=e.target;const p=data.frontages[side][selPlot[side]];if(v.id==='laneWidthSlider'){setLaneWidth(selLane,Number(v.value));document.getElementById('laneWidthMetric').textContent=fmt(data.lanes[canonicalLane(selLane)].w);const n=document.querySelector('#stripEditor .strip.selected');if(n){n.style.width=lanePixels(data.lanes[canonicalLane(selLane)].w)+'px';n.querySelector('.stwidth').textContent=fmt(data.lanes[canonicalLane(selLane)].w);}revealLane();persist();throttled3D()}else if(v.id==='setback'){p.setback=Number(v.value);document.getElementById('setbackMetric').textContent=fmt(p.setback);persist();throttled3D()}else if(v.id==='plotWidth'){changePlotWidth(selPlot[side],Number(v.value));document.getElementById('plotWidthMetric').textContent=fmt(p.w);persist();throttled3D()}else if(v.dataset.laneSpacing){const lane=data.lanes[selLane];if(lane?.kind!=='planting')return;lane.planting[v.dataset.laneSpacing]=Number(v.value);document.getElementById('metric_lane_'+v.dataset.laneSpacing).textContent=fmt(+v.value);persist();throttled3D()}else if(v.dataset.spacing){data.planting[v.dataset.spacing]=Number(v.value);document.getElementById('metric_'+v.dataset.spacing).textContent=fmt(+v.value);persist();throttled3D()}});
+panel.addEventListener('change',e=>{let v=e.target;let p=data.frontages[side][selPlot[side]];if(v.id==='lightwell'){p.lightwell=v.checked;update()}else if(v.id==='stoop'){p.stoop=v.checked;update()}else if(v.id==='crossingsEnabled'){data.planting.crossingsEnabled=v.checked;update()}else if(v.id==='setback'||v.id==='plotWidth'||v.id==='laneWidthSlider'||v.dataset.spacing||v.dataset.laneSpacing){update()}else if(v.dataset.laneTree){const lane=data.lanes[selLane];if(lane?.kind!=='planting')return;const k=v.dataset.laneTree;lane.planting.trees=v.checked?[...new Set([...lane.planting.trees,k])]:lane.planting.trees.filter(s=>s!==k);update()}else if(v.dataset.laneShrub){const lane=data.lanes[selLane];if(lane?.kind!=='planting')return;const k=v.dataset.laneShrub;lane.planting.shrubs=v.checked?[...new Set([...lane.planting.shrubs,k])]:lane.planting.shrubs.filter(s=>s!==k);update()}else if(v.id==='importFile'&&v.files[0])importJSON(v.files[0]);});
+function throttled3D(){const now=Date.now();if(now-last3D>125){last3D=now;queue3D()}else if(!renderTimer){renderTimer=setTimeout(()=>{renderTimer=0;last3D=Date.now();queue3D()},130)}}
+function queue3D(){if(frameRequested)return;frameRequested=true;requestAnimationFrame(()=>{frameRequested=false;if(world)buildScene();else if(typeof THREE!=='undefined'&&!renderer){if(fallbackCanvas){fallbackCanvas.remove();fallbackCanvas=null}init3D()}else if(fallbackCanvas)drawFallback()})}
+// Three.js street scene. The geometry is intentionally generated from data,
+// not from editor controls: plots and strips can later be supplied by the map/designer.
+const matCache=new Map();function mat(c,metal=0,rough=0.88,flat=false){const key=c+','+metal+','+rough+','+flat;if(!matCache.has(key))matCache.set(key,new THREE.MeshStandardMaterial({color:c,metalness:metal,roughness:rough,flatShading:flat}));return matCache.get(key)}
+// Every repeated primitive is drawn as an instance of a shared unit shape: one draw call per shape and colour.
+const GLASS=0x708e94,DARKGLASS=0x4c6a72,IRON=0x353b3a,POT=0xb5694a;
+const GEO={};
+function lumpGeometry(detail,amp,seed){const q=new THREE.IcosahedronGeometry(1,detail),p=q.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+amp*(random(Math.round(x*40)*1.3+Math.round(y*40)*7.1+Math.round(z*40)*13.7+seed)*2-1);p.setXYZ(i,x*k,y*k,z*k)}q.computeVertexNormals();return q}
+function sectionGeometry(pts){const s=new THREE.Shape();pts.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));const q=new THREE.ExtrudeGeometry(s,{depth:1,bevelEnabled:false});q.translate(0,0,-.5);return q}
+function geo(type){
+ if(GEO[type])return GEO[type];let q;
+ switch(type){
+  case'box':q=new THREE.BoxGeometry(1,1,1);break;
+  case'cyl':q=new THREE.CylinderGeometry(1,1,1,12);break;
+  case'limb':q=new THREE.CylinderGeometry(.5,1,1,7);q.translate(0,.5,0);break; // tapered, grows up from its base
+  case'arch':q=new THREE.CylinderGeometry(1,1,1,12,1,false,0,Math.PI);q.rotateZ(Math.PI/2);break; // arched head, axis across the wall
+  case'bay':q=new THREE.CylinderGeometry(1,1,1,3,1,false,0,Math.PI);break; // canted bay: half a hexagon
+  case'gable':q=sectionGeometry([[-.5,0],[.5,0],[0,1]]);break;
+  case'mansard':q=sectionGeometry([[-.5,0],[.5,0],[.38,1],[-.38,1]]);break;
+  case'ico':q=new THREE.IcosahedronGeometry(1,1);break;
+  case'ico0':q=new THREE.IcosahedronGeometry(1,0);break;
+  case'leafA':q=lumpGeometry(1,.2,3);break;
+  case'leafB':q=lumpGeometry(1,.26,71);break;
+  case'leafLow':q=lumpGeometry(0,.16,19);break;
+ }
+ q.userData.shared=true;GEO[type]=q;return q}
+let batch=new Map(),edgeBuf=[],dummy=null;
+function place(type,color,x,y,z,sx,sy,sz,metal=0,flat=false,ry=0,rz=0){if(!dummy){dummy=new THREE.Object3D();dummy.rotation.order='YXZ'}dummy.position.set(x,y,z);dummy.rotation.set(0,ry,rz);dummy.scale.set(sx,sy,sz);dummy.updateMatrix();const key=type+'|'+color+'|'+metal+'|'+flat;let b=batch.get(key);if(!b)batch.set(key,b={type,color,metal,flat,arr:[]});const e=dummy.matrix.elements;for(let i=0;i<16;i++)b.arr.push(e[i])}
+function box(g,w,h,d,x,y,z,color,metal=0){place('box',color,x,y,z,Math.max(.03,w),Math.max(.03,h),Math.max(.03,d),metal)}
+function sphere(g,r,x,y,z,color,scale=[1,1,1]){place('ico',color,x,y,z,r*scale[0],r*scale[1],r*scale[2])}
+// Ink outline of a cross-section (x–y points) extruded along the street.
+function prismEdges(pts,x,y,z,len){const z0=z-len/2,z1=z+len/2;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];edgeBuf.push(x+a[0],y+a[1],z0,x+b[0],y+b[1],z0,x+a[0],y+a[1],z1,x+b[0],y+b[1],z1,x+a[0],y+a[1],z0,x+a[0],y+a[1],z1)}}
+const buildingEdgeMaterial={current:null};
+function flushScene(g){
+ for(const b of batch.values()){const mesh=new THREE.InstancedMesh(geo(b.type),mat(b.color,b.metal,.88,b.flat),b.arr.length/16);mesh.instanceMatrix.array.set(b.arr);mesh.instanceMatrix.needsUpdate=true;mesh.frustumCulled=false;g.add(mesh)}
+ batch.clear();
+ if(edgeBuf.length){if(!buildingEdgeMaterial.current)buildingEdgeMaterial.current=new THREE.LineBasicMaterial({color:0x46514a,transparent:true,opacity:.62});const q=new THREE.BufferGeometry();q.setAttribute('position',new THREE.Float32BufferAttribute(edgeBuf,3));const lines=new THREE.LineSegments(q,buildingEdgeMaterial.current);lines.frustumCulled=false;g.add(lines);edgeBuf=[]}
+}
+function random(n){const x=Math.sin(n*127.1+53.93)*43758.5453;return x-Math.floor(x)}
+function setupCamera(){const extra=Math.max(0,data.lanes.reduce((s,l)=>s+l.w,0)-34);camera.position.set(0,18+extra*CAM_UP,-38-extra*CAM_BACK);camera.lookAt(0,5.0,55)}
+function init3D(){try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setClearColor(0xd2e4e5,1);renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1;viewport.insertBefore(renderer.domElement,viewport.firstChild);scene=new THREE.Scene();scene.background=new THREE.Color(0xd2e4e5);scene.fog=null;camera=new THREE.PerspectiveCamera(51,1,.1,360);scene.add(new THREE.HemisphereLight(0xffffff,0x687a66,.84));const sun=new THREE.DirectionalLight(0xfff5e2,1.00);sun.position.set(-60,115,-70);scene.add(sun);world=new THREE.Group();scene.add(world);window.addEventListener('resize',resize3D);if(window.ResizeObserver)new ResizeObserver(resize3D).observe(viewport);setupCamera();resize3D();buildScene();}catch(e){console.error(e);document.getElementById('viewerFallback').style.display='flex'}}
+function resize3D(){if(!renderer)return;const w=viewport.clientWidth,h=viewport.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.render(scene,camera)}
+function buildScene(){if(!renderer||!world)return;for(const m of [...world.children]){world.remove(m);m.traverse(o=>{if(o.geometry&&!o.geometry.userData.shared)o.geometry.dispose();if(o.isInstancedMesh)o.dispose()})}const g=new THREE.Group(),total=data.lanes.reduce((s,l)=>s+l.w,0);world.add(g);const half=total/2;box(g,220,.2,230,0,-.25,48,0xbacdb4); // site ground
+// Geometry of the continuous cross-section, strip by strip.
+let x=half;data.lanes.forEach((l,i)=>{const w=l.w,cx=x-w/2;const pave=l.kind==='pavement',plant=l.kind==='planting';box(g,w,pave||plant?.12:.06,LENGTH,cx,pave||plant?.065:.035,LENGTH/2,LANE[l.kind].surface);if(l.kind==='cycle'){box(g,w*.88,.008,LENGTH,cx,.073,LENGTH/2,0x68b6a8)}
+if(l.kind==='planting'){box(g,w,.12,LENGTH,cx,.06,LENGTH/2,0x79ac71)}
+if(l.kind==='tram'){for(const offset of [-.64,.64]){box(g,.055,.035,LENGTH,cx+offset,.092,LENGTH/2,0x666a67)}for(let z=1;z<LENGTH;z+=1.8)box(g,2.15,.045,.15,cx,.085,z,0x8b8b7b)}
+if(l.kind==='traffic'||l.kind==='bus'){if(i>0&&['traffic','bus'].includes(data.lanes[i-1].kind))for(let z=2;z<LENGTH-2;z+=7){box(g,.07,.011,3,cx-w/2,.10,z,0xf0ebd9)}if(l.kind==='bus'){for(let z=17;z<LENGTH;z+=29)makeLetter(g,cx,z,'BUS')}}
+if(l.kind==='cycle'){for(let z=13;z<LENGTH;z+=25)bikeSymbol(g,cx,z)}
+if(l.kind==='parking'){for(let z=4;z<LENGTH-5;z+=6){box(g,w*.91,.006,.065,cx,.097,z+2.6,0xebe9dc)}}
+if(l.kind==='planting')makePlantStrip(g,cx,w,i,l.planting);
+if(['traffic','bus','parking','tram'].includes(l.kind))addVehicles(g,cx,l,i);
+x-=w});
+ // Clear, European-style zebra crossing runs transversely through the road.
+let n=data.planting.crossingsEnabled===false?0:data.planting.crossingEvery;if(n>0){for(let z=n/2;z<LENGTH-2;z+=n){const width=4;let a=half;for(const lane of data.lanes){const isWalk=lane.kind==='pavement'||lane.kind==='planting';if(lane.kind==='planting'){box(g,lane.w,.016,width,a-lane.w/2,.144,z,0xdcd8c8);for(let step=-1.6;step<1.7;step+=.8)box(g,lane.w,.008,.038,a-lane.w/2,.155,z+step,0xcac7ba)}else if(!isWalk){for(let step=-1.7;step<1.9;step+=.9){box(g,lane.w-.1,.014,.49,a-lane.w/2,.12,z+step,0xf8f2df)}}a-=lane.w;}}}
+for(const ss of ['left','right'])renderFrontages(g,ss,half);flushScene(g);renderSelection3D(g,half);setupCamera();renderer.render(scene,camera)}
+
+let selTint=null,selLine=null;
+const CAM_UP=.45,CAM_BACK=1.1; // wide streets: pull the camera back so both frontages stay in view
+function selMaterials(){if(!selTint){selTint=new THREE.MeshBasicMaterial({color:0xffb64b,transparent:true,opacity:.36,depthWrite:false,side:THREE.DoubleSide});selLine=new THREE.LineBasicMaterial({color:0xb95222,transparent:true,opacity:.96})}}
+function selectionVolume(g,w,h,d,x,y,z){selMaterials();const geo=new THREE.BoxGeometry(w,h,d),mesh=new THREE.Mesh(geo,selTint);mesh.position.set(x,y,z);mesh.renderOrder=12;g.add(mesh);const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo),selLine);edges.position.copy(mesh.position);edges.renderOrder=13;g.add(edges)}
+// Buildings whose roof is not a flat top are highlighted along their true outline.
+function roofProfile(p){const D=BUILDING_DEPTH,d=D/2,st=clamp(p.stories,1,14),H=st*STOREY_HEIGHT;
+ if(p.kind==='victorian')return[[-d,0],[d,0],[d,H],[d+.25,H],[0,H+3.3],[-d-.25,H],[-d,H]];
+ if(p.kind==='haussmann'&&st>=3)return[[-d,0],[d,0],[d,H-STOREY_HEIGHT],[D*.38,H],[-D*.38,H],[-d,H-STOREY_HEIGHT]];
+ return null}
+function selectionPrism(g,pts,x,y,z,len){selMaterials();const s=new THREE.Shape();pts.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));const geo=new THREE.ExtrudeGeometry(s,{depth:len,bevelEnabled:false});geo.translate(0,0,-len/2);const mesh=new THREE.Mesh(geo,selTint);mesh.position.set(x,y,z);mesh.scale.set(1.02,1.02,1);mesh.renderOrder=12;g.add(mesh);const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo),selLine);edges.position.copy(mesh.position);edges.scale.copy(mesh.scale);edges.renderOrder=13;g.add(edges)}
+function renderSelection3D(g,half){
+ if(tab==='street'&&data.lanes[selLane]){const l=data.lanes[selLane];let x=half;for(let k=0;k<selLane;k++)x-=data.lanes[k].w;selectionVolume(g,l.w,.028,LENGTH,x-l.w/2,.23,LENGTH/2);}
+ if(tab==='frontage'){const a=data.frontages[side],i=selPlot[side],p=a[i];if(!p)return;const sign=side==='left'?1:-1,z=a.slice(0,i).reduce((t,q)=>t+q.w,0)+p.w/2,edge=half*sign,front=edge+sign*p.setback,depth=BUILDING_DEPTH;
+ if(p.kind==='alley'||p.kind==='open'){selectionVolume(g,7.8,.11,Math.max(.25,p.w-.1),edge+sign*4,.20,z);}else{const height=p.stories*STOREY_HEIGHT,prof=roofProfile(p);if(prof)selectionPrism(g,prof,front+sign*depth/2,.1,z,Math.max(.25,p.w-.12));else selectionVolume(g,depth+.13,height+.22,Math.max(.25,p.w-.12),front+sign*depth/2,height/2+.13,z);}}
+}
+function makeLetter(g,x,z,kind){ // schematic bus-lane marking
+for(let i=0;i<3;i++)box(g,.04,.008,.9,x+((i-1)*.55),.115,z,0xe7ddcd)}
+function bikeSymbol(g,x,z){box(g,.065,.011,.85,x,.091,z,0xf7f4e6);for(const dz of [-.4,.4])box(g,.7,.012,.08,x,.091,z+dz,0xf7f4e6)}
+function makePlantStrip(g,cx,width,index,planting){
+ const p=planting,crossings=[];
+ if(data.planting.crossingsEnabled!==false&&data.planting.crossingEvery>0)for(let z=data.planting.crossingEvery/2;z<LENGTH;z+=data.planting.crossingEvery)crossings.push(z);
+ const closeCross=z=>crossings.some(v=>Math.abs(v-z)<3.6),treeSlots=[];
+ if(p.mode!=='shrubs'&&p.trees.length){const step=Math.max(1,p.treeEvery),entries=[];
+  // Planting starts at the near end of the street, not a full interval in.
+  for(let z=Math.min(step*.5,1.5)+(index%2)*Math.min(step*.38,1.5);z<LENGTH-.8;z+=step){if(closeCross(z))continue;entries.push({z,type:p.trees[(Math.round(z/step)+index)%p.trees.length]});treeSlots.push(z)}
+  const total=data.lanes.reduce((n,l)=>n+(l.kind==='planting'&&l.planting.mode!=='shrubs'&&l.planting.trees.length?LENGTH/Math.max(1,l.planting.treeEvery):0),0),lod=total<=40?1:total<=80?.6:.32; // thin out leaf masses when the street is packed with trees
+  for(const t of entries)addTree(g,cx,t.z,t.type,lod)}
+ if(p.mode!=='trees'&&p.shrubs.length){const step=Math.max(.25,p.shrubEvery),rows=clamp(Math.floor(width/1.2),1,4),lod=rows*LENGTH/step<=340?1:.4;
+  for(let r=0;r<rows;r++)for(let z=step*.5+((index+r)%3)*step*.2;z<LENGTH-.3;z+=step){
+   const k=Math.round(z/step),off=rows===1?((k%2)*2-1)*Math.min(width*.12,.22):(r-(rows-1)/2)*width*.74/rows+((k%2)-.5)*.16;
+   if(closeCross(z)||(Math.abs(off)<.7&&treeSlots.some(q=>Math.abs(q-z)<.58)))continue;
+   addShrub(g,cx+off,z,p.shrubs[(k+index+r)%p.shrubs.length],lod)}}
+}
+// Shrubs, each with its own habit: clipped box, blossoming hawthorn, spiked lavender, red-stemmed dogwood, marigold, bougainvillea.
+function addShrub(g,x,z,type,lod=1){
+ let s=z*5.31+x*2.77+3;const R=()=>random(s+=1.91),y=.12,full=lod===1;
+ const lump=(col,dx,dy,dz,sx,sy,sz)=>place('leafLow',col,x+dx,y+dy,z+dz,sx,sy,sz,0,true,R()*6.283,(R()-.5)*.4);
+ const dots=(n,cols,rad,y0,y1,size)=>{for(let i=0;i<n;i++){const a=R()*6.283,q=size*(.8+R()*.5);place('ico0',cols[i%cols.length],x+Math.cos(a)*rad*(.5+R()*.5),y+y0+R()*(y1-y0),z+Math.sin(a)*rad*(.5+R()*.5),q,q*.75,q)}};
+ switch(type){
+  case'hawthorn':lump(0x587f44,0,.42,0,.4,.45,.4);if(full){lump(0x668d4c,.16,.66,.08,.3,.32,.3);lump(0x4d7540,-.15,.58,-.1,.3,.34,.3);dots(7,[0xf2e9dc],.42,.45,.95,.06)}break;
+  case'lavender':lump(0x869a7c,0,.13,0,.27,.15,.27);if(full)for(let i=0;i<9;i++)place('limb',i%3?0x7b66ad:0x9482c4,x+(R()-.5)*.3,y+.14,z+(R()-.5)*.3,.035,.3+R()*.16,.035,0,false,R()*6.283,(R()-.5)*.7);else lump(0x8473b3,0,.3,0,.24,.1,.24);break;
+  case'dogwood':for(let i=0;i<(full?8:3);i++)place('limb',i%2?0xb0483a:0xc45f3f,x+(R()-.5)*.16,y,z+(R()-.5)*.16,.03,.75+R()*.35,.03,0,false,R()*6.283,R()*.5);if(full)for(let i=0;i<4;i++)lump(0x7a8f4c,(R()-.5)*.4,.4+R()*.3,(R()-.5)*.4,.15,.12,.15);break;
+  case'marigold':lump(0x5b8743,0,.12,0,.27,.13,.27);if(full)dots(8,[0xe8922a,0xf2b233],.24,.24,.3,.07);else lump(0xeba02e,0,.24,0,.22,.07,.22);break;
+  case'bougainvillea':lump(0x4b7743,0,.4,0,.45,.4,.45);if(full){lump(0x578349,.2,.62,.1,.34,.3,.34);lump(0x4b7743,-.22,.5,-.12,.34,.3,.34);dots(10,[0xc23a9c,0xd95fb2,0xc23a9c],.5,.35,.95,.12)}else lump(0xc23a9c,0,.72,0,.34,.16,.34);break;
+  default:lump(0x3b6e4b,0,.3,0,.36,.33,.36);if(full){lump(0x457a54,.14,.26,.1,.24,.24,.24);lump(0x34644a,-.13,.24,-.1,.25,.23,.25)}
+ }
+}
+// Street trees. Each species has its own habit: height, clear stem, crown outline, leaf-mass size and bark.
+const TREE_FORM={
+ plane:{h:11.4,crownH:6.3,spread:3.2,shape:'broad',clusters:42,cl:[1.05,1.5],squash:.78,trunk:.3,into:.45,limbs:5,tilt:.85,bark:0x8f8b72,leaf:[0x4a7442,0x58854b,0x699657,0x7ba465]},
+ lime:{h:9.6,crownH:6.3,spread:2.45,shape:'ovoid',clusters:42,cl:[.82,1.18],squash:.9,trunk:.23,into:.5,limbs:4,tilt:.6,bark:0x5f5646,leaf:[0x477a43,0x55894c,0x659858,0x74a563]},
+ birch:{h:9.2,crownH:5.9,spread:1.5,shape:'weeping',clusters:30,cl:[.45,.72],squash:1.55,trunk:.12,into:.9,limbs:4,tilt:.5,bark:0xe6e3d8,leaf:[0x6f9a5c,0x80a968,0x93b877]},
+ rowan:{h:6.2,crownH:3.5,spread:1.85,shape:'round',clusters:24,cl:[.56,.84],squash:.85,trunk:.13,into:.4,limbs:4,tilt:.75,bark:0x75695b,leaf:[0x5c8a4a,0x6b9854,0x7ca661],berry:0xb5371f},
+ jacaranda:{h:10.4,crownH:5.4,spread:3.5,shape:'broad',clusters:46,cl:[.8,1.15],squash:.6,trunk:.24,into:.4,limbs:6,tilt:.95,bark:0x5a5044,leaf:[0x4c7a47,0x5c8c52,0x70a062],bloom:0x9a84c8},
+ ash:{h:11,crownH:6.6,spread:2.7,shape:'ovoid',clusters:36,cl:[.8,1.15],squash:.95,trunk:.24,into:.55,limbs:5,tilt:.6,bark:0x77705f,leaf:[0x55803f,0x678f48,0x7da055,0x8fae5e]},
+ hornbeam:{h:8.8,crownH:6.6,spread:1.7,shape:'flame',clusters:38,cl:[.7,.98],squash:1.05,trunk:.19,into:.6,limbs:3,tilt:.35,bark:0x6b6558,leaf:[0x416b42,0x4d7b4a,0x5c8a52,0x6a9659]}
+};
+function crownRadius(shape,t){switch(shape){
+ case'broad':return Math.pow(Math.sin(Math.PI*(.12+.84*t)),.55);
+ case'ovoid':return Math.pow(Math.sin(Math.PI*(.1+.86*Math.pow(t,1.15))),.8);
+ case'weeping':return .5+.5*Math.sin(Math.PI*(.15+.8*t));
+ case'flame':return t<.3?.6+.4*t/.3:Math.max(.16,Math.pow(1-(t-.3)/.7,.75));
+ default:return Math.pow(Math.sin(Math.PI*(.14+.8*t)),.6)}}
+function addTree(g,x,z,type,lod=1){
+ const f=TREE_FORM[type]||TREE_FORM.lime;let s=z*7.13+x*3.61+11;const R=()=>random(s+=1.37);
+ if(type==='palm'){ // Canary Island date palm: stout unbranched stem, a crown of arching fronds
+  const k=.9+R()*.2,th=7*k,r=.3*k,n=lod===1?18:lod>.5?12:8;
+  place('cyl',0x8a7a62,x,.12+th/2,z,r,th,r);place('cyl',0x8a7a62,x,.19,z,r*1.35,.14,r*1.35);place('leafLow',0x7a6a4e,x,.12+th-.3,z,r*1.9,.75,r*1.9,0,true);
+  for(let i=0;i<n;i++){const az=i*2.39996+R()*.3,tilt=i%3===0?.75:i%3===1?.3:-.25,len=(3+R()*.8)*k,c=Math.cos(tilt);
+   place('leafLow',[0x4f7b40,0x5c8a48,0x456f3a][i%3],x+c*Math.cos(az)*len/2,.22+th+Math.sin(tilt)*len/2,z-c*Math.sin(az)*len/2,len/2,.09,.42,0,true,az,tilt)}
+  return}
+ const k=.88+R()*.24,h=f.h*k,crownH=f.crownH*k,ground=.12,crownBase=ground+h-crownH,spread=f.spread*k,r0=f.trunk*k,trunkTop=crownBase+crownH*f.into,trunkH=trunkTop-ground;
+ const radiusAt=y=>r0*(1-.5*(y-ground)/trunkH);
+ place('limb',f.bark,x,ground,z,r0,trunkH,r0);
+ place('cyl',f.bark,x,ground+.07,z,r0*1.3,.14,r0*1.3); // root flare
+ if(lod===1){
+  for(let i=0;i<f.limbs;i++){const y=crownBase-.2+R()*crownH*.28,len=crownH*(.36+R()*.2);place('limb',f.bark,x,y,z,radiusAt(y)*.62,len,radiusAt(y)*.62,0,false,i/f.limbs*6.283+R()*.8,f.tilt*(.8+R()*.4))}
+  if(type==='plane')for(let i=0;i<7;i++){const a=R()*6.283,y=ground+.35+R()*(crownBase-ground-.2),r=radiusAt(y);place('ico0',i%2?0xcdc6a3:0x6f7358,x+Math.cos(a)*r*.72,y,z+Math.sin(a)*r*.72,r*.42,.2+R()*.22,r*.45)} // flaking, mottled bark
+  if(type==='birch')for(let i=0;i<7;i++){const y=ground+.25+R()*(trunkH*.8),r=radiusAt(y);place('cyl',0x3d3c38,x,y,z,r*1.04,.045+R()*.05,r*1.04)} // dark bands on white bark
+ }
+ const n=Math.max(5,Math.round(f.clusters*lod)),grow=lod<1?Math.min(1.6,1/Math.sqrt(lod)):1,shape=lod<.5?'leafLow':null;
+ for(let i=0;i<n;i++){
+  const t=(i+.25+R()*.5)/n,a=i*2.39996+R()*.7,inner=i%5===0,rad=spread*crownRadius(f.shape,t)*(inner?.2+R()*.3:.6+R()*.4);
+  const cs=(f.cl[0]+R()*(f.cl[1]-f.cl[0]))*grow*(1-.22*t),tone=clamp(Math.floor(t*f.leaf.length+R()*1.3-.5),0,f.leaf.length-1);
+  place(shape||(i%2?'leafA':'leafB'),f.bloom&&R()<.3?f.bloom:f.leaf[tone],x+Math.cos(a)*rad,crownBase+t*crownH-(f.shape==='weeping'?rad*.35:0),z+Math.sin(a)*rad,cs,cs*f.squash,cs,0,true,R()*6.283,(R()-.5)*.5);
+ }
+ if(f.berry&&lod===1)for(let i=0;i<10;i++){const t=.12+R()*.7,a=R()*6.283,rad=spread*crownRadius(f.shape,t)*.95+.25;for(let j=0;j<3;j++)place('ico0',f.berry,x+Math.cos(a+j*.09)*rad,crownBase+t*crownH-j*.07,z+Math.sin(a+j*.09)*rad,.1,.085,.1)} // berry bunches
+}
+function nearCross(z,halfLength){const p=data.planting;if(p.crossingsEnabled===false||!p.crossingEvery)return false;for(let k=p.crossingEvery/2;k<LENGTH;k+=p.crossingEvery)if(Math.abs(k-z)<halfLength+2.6)return true;return false}
+function addVehicles(g,x,l,i){if(l.kind==='tram'){const z=15+(i%2)*60;if(!nearCross(z,8))makeTram(g,x,z);return}const count=l.kind==='parking'?9:l.kind==='bus'?2:3;for(let j=0;j<count;j++){let z=l.kind==='parking'?7+j*12:16+j*38+(i%3)*7;if(z>=LENGTH-3||nearCross(z,l.kind==='bus'?4.5:2))continue;if(l.kind==='bus')makeBus(g,x,z);else makeCar(g,x,z,(i*7+j)%6)}}
+function makeCar(g,x,z,n){const c=[0xe2ece7,0xa5b9b1,0xb77b5f,0x575f61,0x657d7b,0xd1c8ba][n];box(g,1.64,.6,3.7,x,.47,z,c);box(g,1.43,.52,2,x,1.0,z-.28,0x819b9c,.2);for(const zz of [-1.2,1.2])for(const side of [-1,1]){const m=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,.16,9),mat(0x333b3a));m.rotation.z=Math.PI/2;m.position.set(x+side*.8,.29,z+zz);g.add(m)}}
+function makeBus(g,x,z){box(g,2.56,2.5,9,x,1.45,z,0xb35c4d);box(g,2.61,.9,7.6,x,2.1,z,0x73979b,.25);box(g,2.60,.52,9,x,.75,z,0xc7bdad);for(const zz of [-3.4,3.4])for(const side of [-1,1]){const m=new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,.17,9),mat(0x323d3c));m.rotation.z=Math.PI/2;m.position.set(x+side*1.3,.45,z+zz);g.add(m)}}
+function makeTram(g,x,z){box(g,2.55,2.8,16,x,1.55,z,0xc7d8d1);box(g,2.61,.95,15.3,x,2.3,z,0x6d9295,.2);box(g,2.62,.7,16,x,.65,z,0xb95849);box(g,2.6,.16,15.8,x,3.02,z,0x667271);}
+function renderFrontages(g,which,half){let z=0;const sign=which==='left'?1:-1;const footEdge=sign*half;const arr=data.frontages[which];for(let i=0;i<arr.length;i++){const p=arr[i],width=p.w,center=z+width/2;const set=p.setback||0;if(p.kind==='alley'){box(g,7,.045,Math.max(.2,width-.15),footEdge+sign*3.5,.035,center,0xb1b5ad);for(let t=0;t<3;t++)box(g,.06,.012,1,footEdge+sign*(t*1.75+.5),.07,center,0xe4dfcf)}else if(p.kind==='open'){box(g,8,.10,Math.max(.2,width-.18),footEdge+sign*4,.01,center,0x88b58c);for(let t=1;t<=3;t++)if(width>=5)addShrub(g,footEdge+sign*(1.5+(t%2)*2),center-width/2+width*(t/4),'box')}else drawBuilding(g,p,which,footEdge,center,width,i);z+=width}}
+function drawBuilding(g,p,which,edge,z,width,index){
+ const sign=which==='left'?1:-1,fs=-sign,b=BLD[p.kind],st=clamp(p.stories,1,14),L=STOREY_HEIGHT,H=st*L,D=BUILDING_DEPTH,set=p.setback||0,front=edge+sign*set,cx=front+sign*D/2,W=Math.max(.2,width-.17),base=.17,ry=fs>0?0:Math.PI,sv=index*2+(sign>0?0:1),dy=base+(p.stoop?.45:0),doors=[];
+ // Facade vocabulary. "out" is the distance an element stands proud of the wall, towards the street.
+ const face=(out,y0,h,zc,w,color,metal=0)=>box(g,out+.1,h,w,front+fs*(out-.1)/2,y0+h/2,zc,color,metal);
+ const at=(out,thick,y0,h,zc,w,color,metal=0)=>box(g,thick,h,w,front+fs*out,y0+h/2,zc,color,metal);
+ const mass=(zc,w,h,color,y0=base,depth=D,inset=0)=>{const xc=front+sign*(inset+depth/2);box(g,depth,h,w,xc,y0+h/2,zc,color);prismEdges([[-depth/2,0],[depth/2,0],[depth/2,h],[-depth/2,h]],xc,y0,zc,w)};
+ const arch=(zc,y0,w,rise,color,out=.04,metal=0)=>place('arch',color,front+fs*(out-.1)/2,y0,zc,out+.1,rise,w/2,metal);
+ const win=(zc,y0,w,h,o={})=>{const t=o.trim??b.trim,bc=o.barC??t;
+  face(.04,y0,h,zc,w,o.glass??GLASS,.18);
+  if(o.sill!==false)face(.14,y0-.11,.11,zc,w+.22,t);
+  if(o.lintel!==false)face(.1,y0+h,o.lintelH??.16,zc,w+.2,t);
+  if(o.bars==='sash')face(.07,y0+h/2-.03,.06,zc,w,bc);
+  else if(o.bars==='cross'){face(.07,y0+h/2-.025,.05,zc,w,bc);face(.07,y0,h,zc,.05,bc)}
+  else if(o.bars==='french'){face(.07,y0,h,zc,.06,bc);face(.07,y0+h*.74,.05,zc,w,bc)}
+  else if(o.bars==='grid'){const nv=o.nv??3,nh=o.nh??3;for(let i=1;i<nv;i++)face(.07,y0,h,zc-w/2+i*w/nv,.045,bc);for(let i=1;i<nh;i++)face(.07,y0+i*h/nh-.02,.045,zc,w,bc)}};
+ const rail=(out,y0,zc,w,h=.95,color=IRON)=>{at(out,.04,y0+h-.05,.05,zc,w,color);at(out,.04,y0+.08,.04,zc,w,color);const n=Math.max(2,Math.round(w/.42));for(let i=0;i<=n;i++)at(out,.03,y0,h,zc-w/2+i*w/n,.03,color)};
+ const chimney=(zc,y0,h,wx,wz,color,pots)=>{box(g,wx,h,wz,cx,y0+h/2,zc,color);box(g,wx+.14,.1,wz+.14,cx,y0+h+.05,zc,b.trim);for(let i=0;i<pots;i++)place('cyl',POT,cx+(i-(pots-1)/2)*(wx-.3)/Math.max(1,pots-1),y0+h+.28,zc,.1,.36,.1)};
+ const DOOR=[0x2f3b36,0x7a2e2a,0x26384d,0x1f1f22,0x4a5a3c,0x6b5a2c];
+
+ // Brick terrace: one house every 5–6 m, canted bay windows, sash windows, slate roof and shared chimney stacks.
+ function victorian(){
+  const n=Math.max(1,Math.round(W/5.8)),uw=W/n,rh=3.3;
+  for(let u=0;u<n;u++){const zc=z-W/2+(u+.5)*uw,hand=u%2?-1:1,roomy=uw>=4.6;
+   mass(zc,uw,H,b.wall);
+   const dz=zc+hand*uw*.28,bz=zc-hand*uw*.17,bw=Math.min(2.6,uw*.44),bayF=!roomy?0:st>=3?2:1,r=bw/2,sx=.8;
+   face(.03,dy,2.05,dz,.92,DOOR[(sv+u)%6]);face(.04,dy+2.05,.32,dz,.92,GLASS,.18);
+   for(const e of[-1,1])face(.12,dy,2.45,dz+e*.58,.16,b.trim);face(.18,dy+2.4,.2,dz,1.5,b.trim);
+   doors.push({z:dz,w:1.3});
+   for(let f=0;f<st;f++){const y0=base+f*L;
+    if(f>0)win(dz,y0+.8,.9,1.7,{bars:'sash',lintelH:.2});
+    if(f<bayF){
+     const ring=(yy,h,rr,sxx,col,metal=0)=>place('bay',col,front,yy+h/2,bz,sxx,h,rr,metal,true,ry);
+     ring(y0,.8,r,sx,b.wall);ring(y0+.8,.1,r+.07,sx+.06,b.trim);ring(y0+.9,1.65,r-.06,sx-.05,GLASS,.18);ring(y0+2.55,.22,r+.07,sx+.06,b.trim);ring(y0+2.77,L-2.77,r,sx,b.wall);
+     const mx=front+fs*.866*(sx-.03);
+     for(const e of[-1,1]){box(g,.13,1.65,.13,mx,y0+1.725,bz+e*r/2,b.trim);box(g,.12,1.65,.12,front+fs*.05,y0+1.725,bz+e*(r-.04),b.trim)}
+     box(g,.05,.06,r-.12,mx+fs*.03,y0+1.75,bz,b.trim);
+    }else if(roomy&&bw>=2.3)for(const e of[-1,1])win(bz+e*.58,y0+.8,.8,1.7,{bars:'sash',lintelH:.2});
+    else win(bz,y0+.8,1,1.7,{bars:'sash',lintelH:.2});
+   }
+   if(bayF)place('bay',b.roof,front,base+bayF*L+.13,bz,sx+.12,.26,r+.12,0,true,ry);
+   if(st>1)face(.08,base+L-.1,.14,zc,uw,b.trim);
+   face(.18,base+H-.24,.24,zc,uw,b.trim);
+  }
+  place('gable',b.roof,cx,base+H,z,D+.5,rh,W);prismEdges([[-(D+.5)/2,0],[(D+.5)/2,0],[0,rh]],cx,base+H,z,W);
+  for(let u=0;u<n;u++)chimney(z-W/2+u*uw+(u?0:.4),base+H+rh-.8,1.7,1.3,.52,b.wall,4);
+ }
+
+ // Painted stucco terrace: each house its own colour, white trim, columned porch, parapet hiding the roof.
+ function townhouse(){
+  const n=Math.max(1,Math.round(W/5.2)),uw=W/n,PASTEL=[0xb5c49a,0xe0b0aa,0xa6c4d6,0xe6d48e,0xc4b0d4,0xefe3cf,0xa5cdb6,0xdba58a];
+  for(let u=0;u<n;u++){const zc=z-W/2+(u+.5)*uw,hand=u%2?-1:1,col=PASTEL[(sv*3+u*5)%PASTEL.length],two=uw>=4.4;
+   mass(zc,uw,H,col);
+   const dz=two?zc+hand*uw*.25:zc,wz=zc-hand*uw*.22;
+   face(.03,dy,2.1,dz,.95,DOOR[(sv+u*2)%6]);face(.04,dy+2.1,.34,dz,.95,GLASS,.18);
+   for(const e of[-1,1]){place('cyl',b.trim,front+fs*.6,dy+1.25,dz+e*.72,.11,2.5,.11);face(.1,dy,2.5,dz+e*.72,.2,b.trim)}
+   box(g,.95,.26,1.9,front+fs*.42,dy+2.63,dz,b.trim);
+   doors.push({z:dz,w:1.5});
+   for(let f=0;f<st;f++){const y0=base+f*L,attic=f===st-1&&st>2,h=f===1?2.15:attic?1.3:1.75,sy=y0+(f===1?.42:attic?.95:.75);
+    const zs=f===0?(two?[wz]:[]):two?[zc-uw*.22,zc+uw*.22]:[zc];
+    for(const q of zs){win(q,sy,.98,h,{bars:'cross'});for(const e of[-1,1])face(.07,sy,h,q+e*.56,.12,b.trim);
+     if(f===1){face(.3,y0+.28,.1,q,1.5,b.trim);rail(.28,y0+.38,q,1.4,.72)}}
+   }
+   if(st>1)face(.1,base+L-.08,.16,zc,uw,b.trim);
+   face(.24,base+H-.62,.2,zc,uw,b.trim);
+   box(g,.26,.34,uw,front+sign*.13,base+H+.17,zc,col);box(g,.36,.07,uw,front+sign*.11,base+H+.375,zc,b.trim);
+   box(g,D-.4,.05,uw-.2,cx+sign*.12,base+H+.03,zc,b.roof);
+   if(u>0){box(g,D,.3,.2,cx,base+H+.15,zc-uw/2,0xd8d2c4);chimney(zc-uw/2,base+H,1.3,1.2,.5,0xb39a82,3)}
+  }
+ }
+
+ // Parisian limestone block: rusticated base, tall French windows, running iron balconies, zinc mansard with dormers.
+ function haussmann(){
+  const mans=st>=3,ws=mans?st-1:st,wh=ws*L,cols=clamp(Math.round(W/2.6),1,9),cw=W/cols,dc=Math.floor(cols/2),portal=0x2e4a47;
+  mass(z,W,wh,b.wall);
+  for(let y=base+.55;y<base+L-.35;y+=.42)face(.02,y,.035,z,W,0xbfae89);
+  for(let c=0;c<cols;c++){const zc=z-W/2+(c+.5)*cw;
+   if(c===dc){const w=Math.min(1.9,cw*.78);face(.05,dy,2.3,zc,w,portal);arch(zc,dy+2.3,w,.5,portal,.05);face(.09,dy,2.3,zc,.06,0x1f3432);doors.push({z:zc,w})}
+   else{const w=Math.min(1.5,cw*.62);face(.04,base+.6,1.7,zc,w,DARKGLASS,.2);arch(zc,base+2.3,w,.45,DARKGLASS,.04,.2);face(.12,base+.48,.12,zc,w+.2,b.trim)}
+   face(.1,base+2.72,.26,zc,.24,b.trim);
+   for(let f=1;f<ws;f++){const y0=base+f*L,w=Math.min(1.15,cw*.6);
+    win(zc,y0+.32,w,2.2,{bars:'french',lintelH:.14,sill:false});face(.2,y0+2.66,.08,zc,w+.4,b.trim);
+    if(!(f===2||(f===ws-1&&ws>=4)))rail(.14,y0+.32,zc,w+.24,.8)}
+   if(mans){const w=Math.min(1.1,cw*.52),y0=base+wh;box(g,1.25,1.75,w,front+sign*.6,y0+1.075,zc,0xe6dcc3);box(g,1.4,.12,w+.2,front+sign*.62,y0+2.0,zc,b.roof);face(.03,y0+.5,1.25,zc,w-.3,GLASS,.18);face(.05,y0+.5,1.25,zc,.05,b.trim)}
+  }
+  if(st>1)face(.16,base+L-.14,.22,z,W,b.trim);
+  for(const f of new Set([2,ws>=4?ws-1:0]))if(f>0&&f<ws){const y0=base+f*L;face(.62,y0+.14,.14,z,W-.06,b.trim);for(let c=0;c<=cols;c++)face(.5,y0-.14,.28,z-W/2+clamp(c*cw,.2,W-.2),.2,b.trim);rail(.62,y0+.28,z,W-.14,.9)}
+  face(.34,base+wh-.26,.26,z,W,b.trim);
+  if(mans){place('mansard',b.roof,cx,base+wh,z,D,L,W-.06);prismEdges([[-D/2,0],[D/2,0],[D*.38,L],[-D*.38,L]],cx,base+wh,z,W-.06);
+   for(const e of W>8?[-1,1]:[1])chimney(z+e*(W/2-.32),base+H-.2,1.6,D*.6,.5,0xd9cdaa,6)}
+  else box(g,D+.3,.2,W,cx,base+wh+.1,z,b.roof);
+ }
+
+ // 1950s–60s flats: flat oversailing roof, ribbon windows, panel-fronted balconies, glazed stair tower over the entrance.
+ function stucco(){
+  const bays=clamp(Math.round(W/3.5),1,7),bw=W/bays,sb=Math.floor(bays/2),conc=0xe9e2d2,grey=0x5c6660,acc=[0x5f9a94,0xd2a24a,0xc57a62,0x7f9bb5][sv%4];
+  mass(z,W,H,b.wall);
+  face(.03,base,.55,z,W,0xb9a68e);
+  for(let f=1;f<st;f++)face(.09,base+f*L-.07,.12,z,W,conc);
+  for(let c=0;c<bays;c++){const zc=z-W/2+(c+.5)*bw;
+   if(c===sb){const w=Math.min(1.5,bw*.6),cw=Math.min(2.8,bw*.92);
+    face(.05,dy,2.25,zc,w,DARKGLASS,.2);face(.08,dy,2.25,zc,.06,conc);doors.push({z:zc,w});
+    box(g,1.5,.1,cw,front+fs*.7,dy+2.45,zc,conc);for(const e of[-1,1])box(g,.07,dy+2.4-base,.07,front+fs*1.35,(base+dy+2.4)/2,zc+e*(cw/2-.12),grey);
+    if(st>1){const y0=base+L+.25,gh=H-L-.8,gw=Math.min(1.25,bw*.5);face(.05,y0,gh,zc,gw,GLASS,.18);face(.08,y0,gh,zc,.06,conc);for(let y=y0+L/2;y<y0+gh-.3;y+=L/2)face(.08,y,.07,zc,gw,conc);for(const e of[-1,1])face(.14,y0-.15,gh+.3,zc+e*(gw/2+.1),.14,conc)}
+   }else if(Math.abs(c-sb)%2===1)for(let f=0;f<st;f++){const y0=base+f*L,w=bw*.72;
+    if(f===0)win(zc,y0+.75,w,1.6,{bars:'grid',nv:3,nh:1,trim:conc});
+    else{face(.04,y0+.1,2.25,zc,w,GLASS,.18);face(.07,y0+.1,2.25,zc+w*.17,.06,conc);
+     face(1.05,y0-.06,.13,zc,w+.5,conc);at(1.03,.05,y0+.07,.82,zc,w+.5,acc);
+     for(const e of[-1,1])box(g,1,.82,.05,front+fs*.53,y0+.48,zc+e*(w/2+.23),acc);
+     at(1.03,.04,y0+.98,.04,zc,w+.5,grey)}}
+   else for(let f=0;f<st;f++)win(zc,base+f*L+1,bw*.76,1.4,{bars:'grid',nv:3,nh:1,trim:conc,lintel:false});
+  }
+  box(g,D+.9,.16,W,cx,base+H+.08,z,conc);prismEdges([[-D/2-.45,0],[D/2+.45,0],[D/2+.45,.16],[-D/2-.45,.16]],cx,base+H,z,W);
+  if(W>5)box(g,2.6,1.3,Math.min(3,W*.4),cx+sign*1.2,base+H+.8,z-W/2+(sb+.5)*bw,b.wall);
+ }
+
+ // Curtain-wall office: glass skin with slim mullions, opaque spandrel bands, framed entrance, rooftop plant.
+ function office(){
+  const alu=0xdfe5df,dark=0x3d4b4b,pier=Math.min(.5,W*.08),gw=W-2*pier,top=H-.55,pw=Math.min(3,gw*.5);
+  mass(z,W,H,b.wall);
+  for(const e of[-1,1])face(.16,base,H,z+e*(W/2-pier/2),pier,alu);
+  face(.16,base+top,.55,z,W,alu);
+  face(.05,base,top,z,gw,0x6f9da3,.3);
+  for(let f=1;f<st;f++)face(.07,base+f*L-.42,.8,z,gw,0x4f747b,.3);
+  const nm=Math.max(1,Math.round(gw/1.5));
+  for(let i=1;i<nm;i++){const zi=z-gw/2+i*gw/nm,y0=st>1&&Math.abs(zi-z)<pw/2+.2?base+L:base;face(.13,y0,base+top-y0,zi,.06,alu)}
+  if(st>1)face(.11,base+L-.08,.14,z,gw,alu);
+  face(.09,dy,2.7,z,pw,0x3f5d63,.3);for(const e of[-1,0,1])face(.12,dy,2.7,z+e*pw/2,.07,dark);face(.95,dy+2.7,.14,z,pw+.7,dark);
+  doors.push({z,w:pw});
+  box(g,D,.18,W,cx,base+H+.09,z,0x7d8c8e);
+  const ew=Math.min(W*.55,8);box(g,D*.5,1.8,ew,cx+sign*D*.12,base+H+1.08,z,0x93a0a0);
+  for(let y=.45;y<1.8;y+=.3)box(g,D*.5+.05,.05,ew+.05,cx+sign*D*.12,base+H+.18+y,z,0x7a8787);
+ }
+
+ // Brick warehouse: piers between bays, big arched steel-framed windows, a column of loading doors under a hoist, rooflights.
+ function warehouse(){
+  const bays=clamp(Math.round(W/3.7),1,6),bw=W/bays,hb=bw>=3?Math.floor(bays/2):-1,steel=0x2f3533,timber=0x4a3f37,slate=0x55524f;
+  mass(z,W,H,b.wall);
+  face(.2,base,.75,z,W,slate);
+  for(let c=0;c<=bays;c++)face(.17,base,H,z-W/2+clamp(c*bw,.28,W-.28),.56,0x87503f);
+  for(let c=0;c<bays;c++){const zc=z-W/2+(c+.5)*bw;
+   for(let f=0;f<st;f++){const y0=base+f*L;
+    if(c===hb&&f===0){const w=Math.min(2.5,bw-.9);arch(zc,dy+2.3,w+.36,.58,b.trim,.02);face(.05,dy,2.3,zc,w,timber);arch(zc,dy+2.3,w,.42,timber,.05);for(const e of[-1,1])face(.07,dy+1.25,.8,zc+e*w/4,w*.3,DARKGLASS,.2);doors.push({z:zc,w})}
+    else if(c===hb){face(.05,y0+.12,2.25,zc,1.6,timber);for(const e of[-1,1])face(.07,y0+.95,1.15,zc+e*.4,.55,DARKGLASS,.2);face(.45,y0-.03,.09,zc,2,steel);rail(.42,y0+.06,zc,1.9,.95,steel)}
+    else{const w=Math.min(2.3,bw-1),h=1.75;arch(zc,y0+.7+h,w+.3,.5,b.trim,.02);arch(zc,y0+.7+h,w,.36,DARKGLASS,.04,.2);win(zc,y0+.7,w,h,{glass:DARKGLASS,bars:'grid',nv:4,nh:3,barC:steel,lintel:false})}
+   }
+   place('gable',GLASS,cx+sign*.4,base+H+.06,zc,2.4,.75,bw*.55,.18);
+  }
+  if(hb>=0&&st>1){const zc=z-W/2+(hb+.5)*bw;box(g,1.7,.2,.16,front+fs*.55,base+H-.5,zc,steel);box(g,.05,.7,.05,front+fs*1.25,base+H-.95,zc,steel);box(g,.22,.22,.22,front+fs*1.25,base+H-1.38,zc,steel);box(g,1.5,.1,1.5,front+fs*.6,base+H-.32,zc,slate)}
+  face(.24,base+H-.2,.24,z,W,b.trim);
+  box(g,.34,.5,W,front+sign*.17,base+H+.25,z,b.wall);box(g,.42,.08,W,front+sign*.15,base+H+.54,z,b.trim);
+  box(g,D-.5,.06,W-.3,cx+sign*.15,base+H+.03,z,slate);
+ }
+
+ // New-build flats: staggered full-height windows with metal panels, glass-fronted balconies, set-back top floor.
+ function modern(){
+  const pent=st>=4,ms=pent?st-1:st,mh=ms*L,bays=clamp(Math.round(W/3.3),1,7),bw=W/bays,eb=Math.floor(bays/2),bronze=0x9a7a58,frame=0x3f4644,white=0xf1eee6,gb=0xa9cbcc;
+  mass(z,W,mh,b.wall);
+  face(.03,base,L-.12,z,W,0x8d8780);
+  if(ms>1)face(.1,base+L-.12,.12,z,W,white);
+  for(let c=0;c<bays;c++){const zc=z-W/2+(c+.5)*bw;
+   if(c===eb){const w=Math.min(1.8,bw*.6);face(.06,dy,2.45,zc,w,DARKGLASS,.25);face(.09,dy,2.45,zc,.06,frame);face(.8,dy+2.5,.1,zc,w+.8,frame);doors.push({z:zc,w})}
+   else win(zc,base+.25,bw*.72,2.3,{glass:DARKGLASS,bars:'grid',nv:2,nh:1,barC:frame,sill:false,lintel:false});
+   for(let f=1;f<ms;f++){const y0=base+f*L;
+    if(Math.abs(c-eb)%2===1){const w=bw*.74;face(.05,y0+.1,2.4,zc,w,GLASS,.2);face(.08,y0+.1,2.4,zc,.05,frame);
+     face(1.3,y0-.04,.12,zc,w+.3,white);at(1.28,.03,y0+.08,1,zc,w+.3,gb,.3);
+     for(const e of[-1,1])box(g,1.25,1,.03,front+fs*.65,y0+.58,zc+e*(w/2+.14),gb,.3);
+     at(1.28,.05,y0+1.08,.04,zc,w+.34,frame)}
+    else{const dir=f%2?1:-1,w=bw*.42,off=dir*bw*.13;face(.05,y0+.1,2.4,zc+off,w,GLASS,.2);face(.08,y0+.1,2.4,zc+off,.05,frame);face(.04,y0+.1,2.4,zc+off-dir*(w/2+bw*.1),bw*.2,bronze)}
+   }
+  }
+  box(g,D+.1,.1,W,cx,base+mh+.05,z,white);
+  if(pent){const pd=D-2.2,ph=L-.25,y0=base+mh+.1;
+   mass(z,W-1.2,ph,0x6c6f6a,y0,pd,1.6);
+   box(g,.06,ph-.6,W-2.2,front+sign*1.57,y0+ph/2,z,GLASS,.2);
+   box(g,pd+1.4,.14,W-.6,front+sign*(1.6+pd/2-.3),y0+ph+.07,z,white);
+   box(g,.03,1,W-.3,front+sign*.1,y0+.5,z,gb,.3);
+  }else{box(g,.3,.4,W,front+sign*.15,base+mh+.3,z,b.wall);box(g,.36,.07,W,front+sign*.15,base+mh+.53,z,white)}
+ }
+
+ // 1930s mansion block: stepped central tower with fins and a stair window, banded wings, steel windows, drum balconies.
+ function artdeco(){
+  const green=0x3f6f66,steel=0x38413f,tw=clamp(W*.3,2.6,4.2),wing=(W-tw)/2,th=H+1.3,tx=front+sign*.65,o=.3;
+  mass(z,W,H,b.wall);
+  box(g,1.9,th,tw,tx,base+th/2,z,b.trim);prismEdges([[-.95,0],[.95,0],[.95,th],[-.95,th]],tx,base,z,tw);
+  box(g,1.5,.55,tw*.68,tx,base+th+.275,z,b.trim);box(g,1.1,.45,tw*.38,tx,base+th+.775,z,b.trim);box(g,.06,1.8,.06,tx,base+th+1.9,z,steel);
+  for(const e of[-1,1])face(o+.16,base+2.95,th-2.65,z+e*tw*.31,.16,green);
+  if(st>1){const y0=base+L+.2,gh=th-L-1.3,gw=tw*.36;face(o+.04,y0,gh,z,gw,GLASS,.18);face(o+.07,y0,gh,z,.05,steel);for(let y=y0+.7;y<y0+gh-.2;y+=.7)face(o+.07,y,.05,z,gw,steel)}
+  const dw=Math.min(1.5,tw*.5);face(o+.05,dy,2.3,z,dw,green);for(const e of[-1,1])face(o+.08,dy+.95,1.05,z+e*dw*.23,dw*.26,DARKGLASS,.2);
+  place('cyl',b.trim,front+fs*o,dy+2.55,z,1,.16,tw*.42);
+  doors.push({z,w:dw});
+  if(wing>=1.6)for(const e of[-1,1]){const nb=Math.max(1,Math.round(wing/3.2)),ww=wing/nb,zw=z+e*(tw/2+wing/2);
+   for(let f=0;f<st;f++){const y0=base+f*L;
+    face(.07,y0+.83,.12,zw,wing,b.trim);face(.07,y0+2.35,.1,zw,wing,b.trim);
+    for(let i=0;i<nb;i++){const zc=z+e*(tw/2+(i+.5)*ww),w=Math.min(2.3,ww*.7);
+     if(f>0&&i===nb-1&&ww>=2.6){const rz=Math.min(1.35,ww*.42);face(.04,y0+.1,2.25,zc,Math.min(1.1,w),GLASS,.18);face(.07,y0+.1,2.25,zc,.05,steel);place('cyl',b.trim,front,y0+.45,zc,.95,.9,rz);place('cyl',0x8f8674,front,y0+.905,zc,.8,.02,rz-.15)}
+     else win(zc,y0+.95,w,1.4,{bars:'grid',nv:3,nh:3,barC:steel,sill:false,lintel:false})}
+   }
+   for(let i=0;i<3;i++)face(.05,base+H-.22-i*.19,.06,zw,wing,b.trim);
+  }
+  box(g,.34,.5,W,front+sign*.17,base+H+.25,z,b.wall);box(g,.4,.08,W,front+sign*.16,base+H+.54,z,b.trim);
+  box(g,D-.5,.06,W-.3,cx+sign*.15,base+H+.03,z,b.roof);
+ }
+
+ ({victorian,townhouse,haussmann,stucco,office,warehouse,modern,artdeco})[p.kind]();
+ box(g,D+.1,.18,W+.04,cx,.2,z,b.trim);
+
+ // The setback is the building's own plot: paving or a walled front garden, with a path to every door.
+ const gaps=m=>{const out=[];let a=z-width/2+.08;for(const d of doors.slice().sort((q,r)=>q.z-r.z)){if(d.z-m-a>.2)out.push([a,d.z-m]);a=d.z+m}if(z+width/2-.08-a>.2)out.push([a,z+width/2-.08]);return out};
+ if(set>.01){const paved=['office','warehouse','haussmann','modern','artdeco'].includes(p.kind);
+  box(g,set,.055,Math.max(.3,width-.12),edge+sign*set/2,.09,z,paved?0xc4c4b6:0x84ad79);
+  for(const d of doors)box(g,set,.08,Math.min(1.2,d.w),edge+sign*set/2,.13,d.z,0xdbd5c1);
+  if(!paved){for(const [a,c] of gaps(.65))box(g,.13,.65,c-a,edge+sign*.1,.44,(a+c)/2,0x9c9b84);
+   for(const d of doors)for(const e of[-.65,.65])box(g,.22,.85,.22,edge+sign*.1,.52,d.z+e,0x9c9b84);
+   const q=Math.max(2,Math.floor(width/3));for(let i=0;i<q;i++){const zz=z-width/2+(i+.5)*width/q;if(doors.every(d=>Math.abs(zz-d.z)>1.1))addShrub(g,edge+sign*Math.min(.8,set*.58),zz,'box')}}
+ }
+ if(p.stoop)for(const d of doors){const w=Math.min(d.w+.3,2.2);for(let k=0;k<3;k++)box(g,k?.3:.75,.15*(3-k),w,front+fs*(k?.6+k*.3:.375),base-.05+.075*(3-k),d.z,0xb6b1a3)}
+ if(p.lightwell&&set>=1){const lw=Math.min(set*.5,1.3);for(const [a,c] of gaps(.9)){box(g,lw,.03,c-a,front+fs*lw/2,.135,(a+c)/2,0x3f4d4b);for(let zz=a;zz<=c+.01;zz+=Math.max(.3,(c-a)/Math.max(1,Math.round((c-a)/.4))))box(g,.04,.8,.04,front+fs*lw,.53,zz,IRON);box(g,.04,.05,c-a,front+fs*lw,.93,(a+c)/2,IRON)}}
+}
+// Dependency-free projected street illustration; used if Three.js cannot load.
+// All surfaces are built from the same measured layout data as the 3D engine.
+let fallbackCanvas=null, fallbackObserver=null;
+function initFallback(){
+  if(fallbackCanvas)return;
+  fallbackCanvas=document.createElement('canvas');fallbackCanvas.setAttribute('aria-label','Three-dimensional perspective illustration of the street');
+  viewport.insertBefore(fallbackCanvas,viewport.firstChild);
+  if(window.ResizeObserver)fallbackObserver=new ResizeObserver(drawFallback),fallbackObserver.observe(viewport);
+  window.addEventListener('resize',drawFallback);
+  drawFallback();
+}
+function drawFallback(){
+  if(!fallbackCanvas)return;
+  const ratio=Math.min(2,window.devicePixelRatio||1),W=Math.max(250,viewport.clientWidth),H=Math.max(160,viewport.clientHeight);
+  fallbackCanvas.width=Math.floor(W*ratio);fallbackCanvas.height=Math.floor(H*ratio);
+  const ctx=fallbackCanvas.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);
+  const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#cfe4e7');sky.addColorStop(.65,'#e5ebdc');sky.addColorStop(1,'#c4c9b1');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+  const total=data.lanes.reduce((a,l)=>a+l.w,0),half=total/2;
+  const C=[0,18,-38],T=[0,5,55];
+  let f=T.map((v,i)=>v-C[i]),n=Math.hypot(...f);f=f.map(x=>x/n);
+  let right=[-f[2],0,f[0]],rr=Math.hypot(...right);right=right.map(x=>x/rr);
+  let up=[right[1]*f[2]-right[2]*f[1],right[2]*f[0]-right[0]*f[2],right[0]*f[1]-right[1]*f[0]];
+  const foc=Math.min(H*1.13,W*1.4),sh=H*.58;
+  const project=p=>{const v=p.map((x,i)=>x-C[i]),z=v.reduce((s,x,i)=>s+x*f[i],0);if(z<.5)return null;const a=v.reduce((s,x,i)=>s+x*right[i],0),b=v.reduce((s,x,i)=>s+x*up[i],0);return [W*.5+a*foc/z,sh-b*foc/z,z]};
+  const draws=[];
+  function poly(pts,col,stroke=null,weight=.65){const pp=pts.map(project);if(pp.some(p=>!p))return;const d=pp.reduce((a,p)=>a+p[2],0)/pp.length;draws.push({d,draw(){ctx.beginPath();ctx.moveTo(pp[0][0],pp[0][1]);pp.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=col;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=weight;ctx.stroke()}}})}
+  function rect(x1,x2,z1,z2,y,col){poly([[x1,y,z1],[x2,y,z1],[x2,y,z2],[x1,y,z2]],col)}
+  function cuboid(x1,x2,y0,y1,z1,z2,front,side,top){poly([[x1,y0,z1],[x2,y0,z1],[x2,y1,z1],[x1,y1,z1]],side,'#364840a8',1.15);poly([[x1,y0,z2],[x1,y0,z1],[x1,y1,z1],[x1,y1,z2]],front,'#36484090',.95);poly([[x2,y0,z1],[x2,y0,z2],[x2,y1,z2],[x2,y1,z1]],side,'#36484090',.95);poly([[x1,y1,z1],[x2,y1,z1],[x2,y1,z2],[x1,y1,z2]],top,'#36484080',.8)}
+  const kindColors={pavement:'#c5b89f',planting:'#70a76e',cycle:'#5ba99d',traffic:'#64747b',bus:'#b96f64',tram:'#95899e',parking:'#819cad'};
+  for(let z=0;z<LENGTH;z+=8){rect(-half-25,half+25,z,Math.min(LENGTH,z+8),-.22,'#aebfa4')}
+  let xx=half;
+  data.lanes.forEach((lane,i)=>{let x2=xx-lane.w;for(let z=0;z<LENGTH;z+=8){rect(xx,x2,z,Math.min(LENGTH,z+8),lane.kind==='pavement'||lane.kind==='planting'?.13:.04,kindColors[lane.kind])}
+    if(['traffic','bus'].includes(lane.kind)){for(let z=3;z<LENGTH;z+=8)rect(xx+.03,xx+.1,z,z+3,.053,'#eee9dc')}
+    if(lane.kind==='tram'){for(let off of [-.62,.62])rect((xx+x2)/2+off-.035,(xx+x2)/2+off+.035,0,LENGTH,.06,'#687270')}
+    if(lane.kind==='parking'){for(let z=2;z<LENGTH;z+=7)rect(xx,x2,z,z+.06,.052,'#eee7d9')}
+    if(lane.kind==='planting'){const plant=lane.planting;const crossings=data.planting;const close=z=>crossings.crossingsEnabled!==false&&Array.from({length:Math.ceil(LENGTH/crossings.crossingEvery)},(_,k)=>crossings.crossingEvery*(k+.5)).some(t=>Math.abs(t-z)<3.8);
+    if(plant.mode!=='shrubs'&&plant.trees.length)for(let z=plant.treeEvery*.65+(i%2)*plant.treeEvery*.38;z<LENGTH;z+=plant.treeEvery){if(close(z))continue;const type=plant.trees[(Math.floor(z/plant.treeEvery)+i)%plant.trees.length];tree((xx+x2)/2,z,type)}
+    if(plant.mode!=='trees'&&plant.shrubs.length)for(let z=plant.shrubEvery*.55;z<LENGTH;z+=plant.shrubEvery){if(close(z))continue;if(plant.mode==='mixed'&&plant.trees.length&&Math.abs(z%plant.treeEvery-plant.treeEvery*.65)<.58)continue;shrub((xx+x2)/2,z,plant.shrubs[(Math.floor(z/plant.shrubEvery)+i)%plant.shrubs.length])}}
+    if(lane.kind==='traffic'||lane.kind==='parking'){for(let z=11+(i%3)*6;z<LENGTH;z+=lane.kind==='parking'?14:39)if(!nearCross(z,2))vehicle((xx+x2)/2,z,lane.kind==='parking'?3.2:3.8,false)}
+    if(lane.kind==='bus'){for(let z=16;z<LENGTH;z+=50)if(!nearCross(z,5))vehicle((xx+x2)/2,z,8,true)}
+    if(lane.kind==='tram')if(!nearCross(17,8))vehicle((xx+x2)/2,17,15,true);
+    xx=x2});
+  if(data.planting.crossingsEnabled!==false&&data.planting.crossingEvery){let n=data.planting.crossingEvery;for(let z=n/2;z<LENGTH;z+=n){let x=half;for(const l of data.lanes){if(l.kind==='planting')rect(x,x-l.w,z-2,z+2,.145,'#e2ded1');else if(l.kind!=='pavement')for(let q=-1.7;q<2;q+=.9)rect(x-.07,x-l.w+.07,z+q,z+q+.47,.12,'#f6f0e5');x-=l.w}}}
+  for(const which of ['left','right']){let z=0,sign=which==='left'?1:-1,edge=half*sign;for(const p of data.frontages[which]){const width=p.w,kind=p.kind,z1=z+.08,z2=z+width-.08;const b=BLD[kind];if(kind==='alley'){rect(edge,edge+sign*11,z1,z2,.02,'#b8b9ac');z+=width;continue}if(kind==='open'){rect(edge,edge+sign*11,z1,z2,.035,'#93ba8a');for(let k=0;k<3;k++)shrub(edge+sign*2.8,z1+(k+.5)*(z2-z1)/3,'box');z+=width;continue}
+      const front=edge+sign*p.setback,outer=front+sign*BUILDING_DEPTH,height=p.stories*STOREY_HEIGHT,wall='#'+b.wall.toString(16).padStart(6,'0'),roof='#'+b.roof.toString(16).padStart(6,'0');
+      if(p.setback>0){rect(edge,front,z1,z2,.045,kind==='office'||kind==='warehouse'||kind==='haussmann'?'#c5c2b4':'#99b486');if(kind!=='office'&&kind!=='warehouse')for(let k=0;k<2;k++)shrub(edge+sign*Math.min(1.0,p.setback*.6),z1+(k+.5)*(z2-z1)/2,'box')}
+      cuboid(Math.min(front,outer),Math.max(front,outer),.13,height,z1,z2,wall,kind==='office'?'#7c9b9b':shade(wall,-12),shade(wall,17));
+      const fx=front-sign*.085;
+      const floorH=height/p.stories,cols=clamp(Math.floor(width/2.7),1,6);
+      for(let floor=0;floor<p.stories;floor++)for(let j=0;j<cols;j++){
+         const zc=z1+(j+.5)*(z2-z1)/cols,door=floor===0&&j===Math.floor(cols/2),ww=Math.min(1.2,(z2-z1)/cols*.65),hh=door?2.15:1.55,cy=.2+floor*floorH+(door?1.05:floorH*.56);
+         poly([[fx,cy-hh/2,zc-ww/2],[fx,cy-hh/2,zc+ww/2],[fx,cy+hh/2,zc+ww/2],[fx,cy+hh/2,zc-ww/2]],door?'#62594f':'#4b7885','#eee2c9',door?1.45:1.05);
+      }
+      if(kind==='haussmann'||kind==='victorian'||kind==='townhouse')cuboid(Math.min(front,outer)-.15,Math.max(front,outer)+.15,height-.43,height,z1+.03,z2-.03,roof,roof,shade(roof,15));
+      if(kind==='haussmann')cuboid(Math.min(front,outer)+.4,Math.max(front,outer)-.4,height-1.35,height,z1+.3,z2-.3,roof,roof,shade(roof,10));
+      if(p.stoop){for(let k=0;k<3;k++){const fx1=front-sign*(.2+k*.3);cuboid(Math.min(fx1,fx1+sign*.25),Math.max(fx1,fx1+sign*.25),.04,.14+k*.11,z+(width-1.8)/2,z+(width+1.8)/2,'#b8b1a3','#b8b1a3','#ddd4c2')}}
+      if(p.lightwell&&p.setback>1){rect(front,front-sign*1.2,z+(width*.25),z+(width*.75),-.08,'#4f6362')}
+      z+=width;
+   }}
+  draws.sort((a,b)=>b.d-a.d);for(const q of draws)q.draw();
+  // A softly drawn horizon and light haze keep this diagrammatic rather than photorealistic.
+  
+  function selectedFace(pts){const v=pts.map(project);if(v.some(q=>!q))return;ctx.beginPath();ctx.moveTo(v[0][0],v[0][1]);for(let j=1;j<v.length;j++)ctx.lineTo(v[j][0],v[j][1]);ctx.closePath();ctx.fillStyle='rgba(254,177,59,.35)';ctx.fill();ctx.lineWidth=2.8;ctx.strokeStyle='#b75524';ctx.stroke();}
+  if(tab==='street'&&data.lanes[selLane]){const lane=data.lanes[selLane];let xx=half-data.lanes.slice(0,selLane).reduce((sum,l)=>sum+l.w,0);selectedFace([[xx,.22,0],[xx-lane.w,.22,0],[xx-lane.w,.22,LENGTH],[xx,.22,LENGTH]]);}
+  if(tab==='frontage'){const arr=data.frontages[side],i=selPlot[side],q=arr[i];if(q){const sign=side==='left'?1:-1,z0=arr.slice(0,i).reduce((sum,p)=>sum+p.w,0),z1=z0+q.w,edge=half*sign,front=edge+sign*(q.setback||0),h=q.stories*STOREY_HEIGHT;if(q.kind==='alley'||q.kind==='open')selectedFace([[edge,.2,z0],[edge+sign*8,.2,z0],[edge+sign*8,.2,z1],[edge,.2,z1]]);else {selectedFace([[front,.14,z0],[front,.14,z1],[front,h,z1],[front,h,z0]]);selectedFace([[front,h,z0],[front+sign*BUILDING_DEPTH,h,z0],[front+sign*BUILDING_DEPTH,h,z1],[front,h,z1]])}}}
+
+  function shade(color,amount){let n=parseInt(color.slice(1),16);let r=clamp((n>>16)+amount,0,255)|0,g=clamp(((n>>8)&255)+amount,0,255)|0,b=clamp((n&255)+amount,0,255)|0;return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')}
+  function billboard(x,y,z,r,color,oval=1){const q=project([x,y,z]);if(!q)return;const px=r*foc/q[2];draws.push({d:q[2]-.05,draw(){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(q[0],q[1],px,px*oval,0,0,Math.PI*2);ctx.fill()}})}
+  function tree(x,z,type){const palette={plane:['#587d59','#729e6b'],lime:['#679564','#7eac73'],birch:['#96ae85','#b4c89d'],rowan:['#82a56c','#ac945d'],hornbeam:['#60865b','#8ca46c']}[type]||['#668e63','#85a879'];const y=type==='birch'?4.8:4.2;
+    poly([[x-.11,.12,z],[x+.11,.12,z],[x+.13,y,z],[x-.13,y,z]],type==='birch'?'#e5e0d3':'#7f735c');
+    for(let j=0;j<3;j++)billboard(x+Math.cos(j*2.4)*.66,y+.65+(j%2)*.6,z+Math.sin(j*2.4)*.7,1.5,palette[j%2],type==='birch'?1.2:.96);
+  }
+  function shrub(x,z,type){const c={box:'#648963',hawthorn:'#8a9c68',lavender:'#a6a0bd',dogwood:'#8e996b'}[type]||'#73916c';billboard(x,.5,z,type==='lavender'?.44:.62,c,.80)}
+  function vehicle(x,z,len,big){const w=big?2.45:1.65,hh=big?2.8:1.2;
+  cuboid(x-w/2,x+w/2,.14,.14+hh,z-len/2,z+len/2,big?'#ca7765':'#d9d5c8',big?'#a76452':'#b0b9b5','#96b5af');
+  cuboid(x-w*.42,x+w*.42,.14+hh*.58,.14+hh*.86,z-len*.39,z+len*.39,'#6e9da2','#64898f','#899e9b')}
+}
+
+let timeout=0;function boot(){syncLabels();loadRemoteLibrary();refreshPanel(false);if(window.THREE)init3D();else{initFallback();timeout++;if(timeout<30)setTimeout(bootThree,300)}}function bootThree(){if(window.THREE){if(fallbackCanvas){fallbackCanvas.remove();fallbackCanvas=null}init3D()}else if(++timeout<30)setTimeout(bootThree,300)}boot();
+</script>
+</body>
+</html>
